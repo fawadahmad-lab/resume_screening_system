@@ -1,0 +1,33 @@
+ALEX THOMPSON
+alex.thompson@email.com | (206) 555-0341 | Seattle, WA
+LinkedIn: linkedin.com/in/alexthompson
+
+SUMMARY
+Frontend Developer with 5 years of experience building React applications
+for SaaS products. Solid TypeScript and CSS skills, though with a notable
+employment gap in 2023.
+
+EXPERIENCE
+
+Frontend Developer | SaaSify | Apr 2024 – Present
+- Build and maintain React + TypeScript dashboard for B2B analytics
+  product
+- Implemented real-time data updates using WebSockets and React Query
+- Created responsive design system with Tailwind CSS
+- Wrote Cypress end-to-end tests covering critical user flows
+
+Frontend Developer | DataPulse | Jan 2020 – Dec 2022
+- Developed customer-facing React application for data visualization
+- Built reusable TypeScript component library (30+ components)
+- Collaborated with backend team on GraphQL API integration
+- Improved Lighthouse performance score from 55 to 88
+
+GAP: Jan 2023 – Mar 2023 (approximately 3 months)
+(Parental leave, followed by job search)
+
+EDUCATION
+B.S. Computer Science | University of Washington | 2019
+
+SKILLS
+React, TypeScript, JavaScript, Tailwind CSS, GraphQL, React Query,
+WebSockets, Cypress, Jest, Git, Vercel, REST APIs

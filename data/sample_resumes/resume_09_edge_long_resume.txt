@@ -1,0 +1,91 @@
+DR. AMARA OSEI, PMP, CSM, AWS-SAA, TOGAF, ITIL, SAFe
+amara.osei@email.com | (404) 555-0067 | Atlanta, GA
+LinkedIn: linkedin.com/in/amaraosei
+
+SUMMARY
+Highly accomplished technology leader and program manager with 18+ years
+of progressive experience spanning software development, cloud
+architecture, enterprise transformation, and strategic IT governance.
+Recognized for driving large-scale digital transformation initiatives
+across Fortune 500 organizations. Published author and frequent
+conference speaker on topics including DevOps maturity models, cloud
+migration strategies, and agile portfolio management.
+
+CERTIFICATIONS
+- Project Management Professional (PMP) — PMI, 2015
+- Certified Scrum Master (CSM) — Scrum Alliance, 2016
+- AWS Solutions Architect – Associate — Amazon Web Services, 2020
+- TOGAF 9 Certified — The Open Group, 2017
+- ITIL v4 Foundation — AXELOS, 2014
+- SAFe 5.0 Agilist — Scaled Agile, 2021
+- Certified Kubernetes Administrator (CKA) — CNCF, 2022
+- Google Cloud Professional Cloud Architect — 2023
+- Six Sigma Green Belt — ASQ, 2018
+- Certified Information Systems Security Professional (CISSP) — (ISC)², 2019
+
+PROFESSIONAL EXPERIENCE
+
+VP of Engineering / Program Director | GlobalTech Enterprises | 2020 – Present
+- Lead a portfolio of 12 enterprise technology programs with combined
+  budget of $45M annually
+- Oversaw migration of 200+ legacy applications to AWS cloud, completing
+  6 months ahead of schedule and $3M under budget
+- Established Enterprise Architecture Review Board, reducing redundant
+  technology purchases by 28%
+- Manage a distributed team of 120+ engineers across 4 time zones
+- Implemented SAFe agile framework across 8 delivery teams, improving
+  on-time delivery rate from 65% to 92%
+- Partner with C-suite on technology strategy and annual planning
+
+Senior Program Manager | Meridian Financial Services | 2016 – 2020
+- Managed $20M digital transformation program for retail banking division
+- Led API-first architecture initiative connecting 15 backend systems
+- Implemented CI/CD pipelines reducing release cycle from quarterly to
+  bi-weekly
+- Coordinated vendor selection and contract negotiation for enterprise
+  SaaS platforms ($5M+ in contracts)
+- Built and led a Center of Excellence for DevOps practices
+
+Technical Project Manager | Pinnacle Insurance Group | 2012 – 2016
+- Managed development of customer-facing web portal (React, Node.js)
+  serving 500K+ policyholders
+- Led team of 25 developers and QA engineers across 3 concurrent projects
+- Established project governance framework adopted company-wide
+- Delivered all projects on time and within budget for 4 consecutive
+  fiscal years
+
+Software Developer → Senior Developer → Tech Lead | DataStream Inc. | 2006 – 2012
+- Started as junior developer, promoted to tech lead within 3 years
+- Built enterprise data integration platform using Java, Spring, and
+  Oracle
+- Led team of 8 developers on customer data management system
+- Mentored 12 junior developers over tenure
+
+EDUCATION
+PhD, Computer Science (Distributed Systems) | Georgia Institute of
+Technology | 2006
+M.S. Computer Science | Georgia Institute of Technology | 2003
+B.S. Computer Science | University of Ghana | 2001
+
+PUBLICATIONS & SPEAKING
+- "Cloud Migration at Scale: Lessons from the Trenches" — IEEE
+  Conference, 2022
+- "Building DevOps Maturity in Regulated Industries" — O'Reilly
+  Platform Con, 2021
+- "The Enterprise Architect's Playbook for Digital Transformation" —
+  Published book, Apress, 2020
+- Regular contributor to InfoQ and IEEE Software
+
+TECHNICAL SKILLS
+Languages: Java, Python, JavaScript/TypeScript, Go, SQL
+Cloud: AWS (EC2, ECS, Lambda, RDS, S3, CloudFormation), GCP (GKE,
+Cloud Run, BigQuery), Azure (DevOps, AKS)
+Frameworks: React, Node.js, Spring Boot, Django, .NET
+DevOps: Kubernetes, Docker, Terraform, Jenkins, GitHub Actions, ArgoCD,
+Prometheus, Grafana
+Data: PostgreSQL, MySQL, MongoDB, Redis, Kafka, Elasticsearch
+Methodologies: SAFe, Scrum, Kanban, XP, Waterfall (legacy projects)
+Architecture: Microservices, Event-Driven, API-First, Domain-Driven
+Design, CQRS, Serverless
+Leadership: Program Management, Portfolio Management, Vendor
+Negotiation, Executive Communication, Budget Management ($45M+)

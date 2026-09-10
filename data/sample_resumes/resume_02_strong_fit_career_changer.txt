@@ -1,0 +1,39 @@
+MARCUS JOHNSON
+marcus.johnson@email.com | (312) 555-0287 | Chicago, IL
+LinkedIn: linkedin.com/in/marcusjohnson
+
+SUMMARY
+Former high school math teacher transitioning to frontend development.
+Completed a 12-month intensive coding bootcamp and built 5 production
+React applications. Strong communicator with a talent for breaking down
+complex problems — skills that translate directly to building intuitive
+user interfaces.
+
+EXPERIENCE
+
+Frontend Developer (Bootcamp Projects) | Code Academy Chicago | Sep 2023 – Aug 2024
+- Built a collaborative task management app (React, TypeScript, Firebase)
+  used by 200+ students for group project coordination
+- Developed a real-time data visualization dashboard (React, D3.js,
+  WebSockets) displaying live stock market data
+- Created an accessible e-commerce storefront (Next.js, Stripe API)
+  with WCAG 2.1 AA compliance
+- Implemented CI/CD pipeline using GitHub Actions; deployed via Vercel
+
+High School Mathematics Teacher | Chicago Public Schools | Aug 2018 – Jun 2023
+- Taught Algebra II and AP Statistics to 150+ students annually
+- Designed curriculum and created interactive learning materials using
+  technology (Google Workspace, Desmos, GeoGebra)
+- Led after-school coding club introducing 40 students to web development
+  fundamentals (HTML, CSS, JavaScript)
+- Managed classroom of 30+ students; adapted communication style for
+  diverse learning needs
+
+EDUCATION
+B.A. Mathematics | University of Illinois at Chicago | 2018
+Certificate in Full-Stack Web Development | Code Academy Chicago | 2024
+
+SKILLS
+React, TypeScript, JavaScript, Next.js, HTML5, CSS3, Firebase, Git,
+GitHub Actions, Vercel, Stripe API, D3.js, WebSockets, Responsive Design,
+Accessibility (WCAG), Agile/Scrum

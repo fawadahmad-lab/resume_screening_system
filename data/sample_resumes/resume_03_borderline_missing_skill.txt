@@ -1,0 +1,31 @@
+PRIYA PATEL
+priya.patel@email.com | (512) 555-0134 | Austin, TX
+LinkedIn: linkedin.com/in/priyapatel
+
+SUMMARY
+Frontend developer with 4 years of experience in React and JavaScript.
+Strong UI skills and design sensibility, but limited experience with
+TypeScript and no background in design systems or component libraries.
+
+EXPERIENCE
+
+Frontend Developer | StartupGrid | Mar 2022 – Present
+- Built and maintain the company's main customer-facing React application
+- Implemented responsive layouts using CSS Grid and Flexbox
+- Integrated REST APIs with React using Axios and React Query
+- Wrote unit tests using Jest (approximately 40% code coverage)
+- Participated in weekly sprint planning and code reviews
+
+Junior Web Developer | Digital Forge | Jan 2020 – Feb 2022
+- Developed marketing websites for small businesses using React and
+  plain JavaScript
+- Created interactive forms and landing pages with HTML5, CSS3, and jQuery
+- Maintained WordPress sites alongside custom React projects
+
+EDUCATION
+B.A. Graphic Design | Texas State University | 2019
+Self-taught JavaScript and React via freeCodeCamp and online tutorials
+
+SKILLS
+React, JavaScript, HTML5, CSS3, jQuery, Axios, React Query, Jest,
+Git, Figma (basic), Responsive Design, REST APIs

@@ -1,0 +1,41 @@
+DAVID KIM
+david.kim@email.com | (650) 555-0498 | Palo Alto, CA
+LinkedIn: linkedin.com/in/davidkim
+
+SUMMARY
+Staff Engineer with 15 years of experience in frontend and full-stack
+development. Former tech lead at Google and Meta. Deep expertise in
+React, performance optimization, and large-scale system architecture.
+PhD in Computer Science from Stanford.
+
+EXPERIENCE
+
+Staff Engineer | Meta (Facebook) | Mar 2019 – Present
+- Lead frontend architecture for Instagram's Creator Monetization tools,
+  serving 200M+ monthly active users
+- Designed and implemented a micro-frontend architecture enabling 12
+  teams to ship independently
+- Reduced JavaScript bundle size by 40% through code splitting and lazy
+  loading strategies
+- Built internal design system (React + TypeScript) adopted by 8 product
+  teams
+
+Senior Software Engineer | Google | Jul 2014 – Feb 2019
+- Core contributor to Angular team; authored multiple RFCs adopted into
+  the framework
+- Led frontend performance initiative for Google Search, reducing Time to
+  Interactive by 300ms on mobile
+- Mentored 8 engineers across 3 teams
+
+Software Engineer | LinkedIn | Jun 2011 – Jun 2014
+- Built real-time messaging features using React and WebSockets
+- Implemented A/B testing framework used across the product
+
+EDUCATION
+PhD Computer Science | Stanford University | 2011
+B.S. Computer Science | UC Berkeley | 2007
+
+SKILLS
+React, Angular, TypeScript, JavaScript, Python, Go, Micro-Frontends,
+Performance Optimization, Design Systems, GraphQL, REST, CI/CD,
+System Architecture, Technical Leadership

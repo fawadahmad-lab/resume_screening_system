@@ -1,0 +1,18 @@
+▓▓ J研发中心 ▓▓ 候选人姓名：刘伟 ▓▓
+邮箱：liu.wei@email.com ☎ (626) 555-0▓▓▓
+
+## EXPERIENCE
+Senior S developersw at GlobalTech for 6 yea###rs.
+Built web applica ions using ReAct, TyepScript, and Node.js.
+Worked on ¥¥¥ fro$$$tend architec###ture and compo###ent libra##ry.
+Managd a team of 4 deve###lopers on the pl#atform team.
+
+Previo###sly at StartupXYZ (2##018-2020) w###here I did full-s###tack dev
+with React and Python/Djan##go. Built REST APIs and ###deployed to AWS.
+
+## EDUCATION
+BS in Computer Scie##nce from UC Ir##vine, 2017
+
+## SKILLS
+React, TyepScript, JavaScript, Python, Node.js, Django, PostgreSQL,
+AWS, Docker, Git, REST APIs

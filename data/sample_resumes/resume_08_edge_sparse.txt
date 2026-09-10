@@ -1,0 +1,14 @@
+TOM WRIGHT
+tom.wright@email.com | (617) 555-0203 | Boston, MA
+
+EXPERIENCE
+
+Software Developer | CodeCo | 2021 – Present
+- Build web apps with React
+- Work with JavaScript and TypeScript
+
+EDUCATION
+B.S. Computer Science | Boston University | 2020
+
+SKILLS
+React, JavaScript, TypeScript, HTML, CSS, Git

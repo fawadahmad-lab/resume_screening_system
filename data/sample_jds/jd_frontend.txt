@@ -1,0 +1,25 @@
+Senior Frontend Developer — TechNova Inc.
+
+About the Role
+We are looking for a Senior Frontend Developer to lead the build-out of our
+next-generation SaaS dashboard. You will own the frontend architecture,
+mentor two junior developers, and work closely with our design and backend
+teams.
+
+Requirements
+- 5+ years of professional experience with React, TypeScript, and modern CSS
+- Experience building and maintaining design systems or component libraries
+- Proficiency with state management (Redux, Zustand, or Recoil)
+- Familiarity with CI/CD pipelines (GitHub Actions, CircleCI)
+- Strong understanding of web performance optimization
+- Experience with testing frameworks (Jest, React Testing Library, Cypress)
+- Bachelor's degree in Computer Science or equivalent experience
+
+Nice to Have
+- Experience with Next.js or Remix
+- Familiarity with GraphQL
+- Contributions to open-source projects
+- Experience in a SaaS or B2B product environment
+
+Compensation: $140,000 – $175,000 USD + equity
+Location: Remote (US timezone overlap required)
