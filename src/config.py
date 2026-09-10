@@ -78,14 +78,19 @@ def get_metrics_file() -> str:
 def rate_limit_sleep(exception: Exception) -> None:
     """Sleep until a Groq 429 rate-limit window closes.
 
-    Groq embeds 'Please try again in Xs' in rate-limit errors. Parse it and
-    sleep X + a small buffer so the next LLM attempt lands in a fresh TPM
-    window (gpt-oss-20b has a tight 8k tokens/min limit). Falls back to a
-    20s sleep if the wait can't be parsed.
+    Groq embeds 'Please try again in Xs' (or 'XmYs') in rate-limit errors.
+    Parse and sleep that duration + a small buffer so the next LLM attempt
+    lands in a fresh TPM window (gpt-oss-20b has a tight 8k tokens/min
+    limit). Falls back to a 20s sleep if the wait can't be parsed.
     """
     try:
-        match = re.search(r"Please try again in ([\d.]+)", str(exception))
-        wait = float(match.group(1)) if match else 20.0
+        match = re.search(r"Please try again in (\d+(?:\.\d+)?)(s|m|h)", str(exception))
+        if match:
+            value = float(match.group(1))
+            unit = match.group(2)
+            wait = value * {"s": 1, "m": 60, "h": 3600}[unit]
+        else:
+            wait = 20.0
     except Exception:
         wait = 20.0
     time.sleep(wait + 2.0)

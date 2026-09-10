@@ -290,7 +290,16 @@ assumption that a later end-to-end test will catch everything.
       `openai/gpt-oss-120b`; on Day 4 the 120b model exhausted its 200k
       tokens/day (TPD) window mid-run, so normalization/scoring switched to
       `openai/gpt-oss-20b` (own per-model TPD window). Recorded in session
-      summary as a config change, not a schema/stage/dependency change.**
+      summary as a config change, not a schema/stage/dependency change.
+      gpt-oss-20b has a tight **8k tokens/min** (TPM) window plus 200k
+      tokens/day; to run the 13-case dev suite without fatal 429s we added
+      `llm.call_interval_s: 40` fixed pacing of every LLM call,
+      `rate_limit_sleep()` (parse 'Please try again in Xs/Xm' from Groq
+      errors and wait out the window between retry attempts), and
+      `llm.max_retries: 2`. Both free-tier TPD windows slided down during the
+      failed first E3/E4 attempts, so the E3/E4 background job waits with
+      TPD-aware backoff until a full run fits — Checkpoint E will only record
+      genuinely quota-free snapshots.**
 - [x] Scoring call additional input: **Aside from candidate profile + JD, the
       raw resume text is passed into the scoring call so (a) evidence strings
       are grounded in specific resume details and (b) embedded prompt-injection

@@ -149,3 +149,5 @@
 2026-09-10 14:17:20 stage=score candidate=resume_05_not_fit_wrong_domain model=openai/gpt-oss-20b latency=18.01s tokens_in=1994 tokens_out=1065
 2026-09-10 14:17:37 stage=normalize candidate=resume_06_edge_employment_gap model=openai/gpt-oss-20b latency=2.02s tokens_in=1088 tokens_out=1251
 2026-09-10 14:30:26 stage=normalize candidate=resume_13_adversarial_prompt_injection model=openai/gpt-oss-20b latency=1.45s tokens_in=1046 tokens_out=755
+2026-09-10 14:36:43 stage=normalize candidate=resume_02_strong_fit_career_changer model=openai/gpt-oss-20b latency=3.32s tokens_in=1196 tokens_out=891
+2026-09-10 14:48:37 stage=normalize candidate=resume_13_adversarial_prompt_injection model=openai/gpt-oss-20b latency=1.47s tokens_in=1046 tokens_out=786
