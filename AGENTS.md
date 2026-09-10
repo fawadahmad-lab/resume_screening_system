@@ -173,7 +173,10 @@ including if they're worse than the dev set's.
 ## 12. Coding Conventions
 
 - Language: Python
-- LLM provider: Groq API, model `openai/gpt-oss-120b`, structured output via
+- LLM provider: Groq API, model `openai/gpt-oss-20b` (switched from
+  `openai/gpt-oss-120b` on 2026-09-10 when the 120b model hit its 200k
+  tokens/day window mid-Day-4; 20b runs under its own per-model quota),
+  structured output via
   `response_format` JSON schema (strict mode) — never regex-parse free text
 - Schema validation: Pydantic v2 models mirroring Section 8 exactly
 - Interface: Streamlit
@@ -280,10 +283,14 @@ assumption that a later end-to-end test will catch everything.
       **Both. CLI (`src/pipeline.py`) is the primary batch entry point used by
       the eval suite; `app.py` Streamlit UI is the recruiter-facing interface.**
 - [x] Model used for normalization/scoring calls:
-      **Groq API, `openai/gpt-oss-120b`, structured output in strict mode
+      **Groq API, `openai/gpt-oss-20b`, structured output in strict mode
       (`response_format` JSON schema). Micro-decisions: all LLM calls share a
       single cached Groq client (`src/config.py`), latency/token logging since
-      Phase 4 to `data/results/call_metrics.log`.**
+      Phase 4 to `data/results/call_metrics.log`. Model was initially
+      `openai/gpt-oss-120b`; on Day 4 the 120b model exhausted its 200k
+      tokens/day (TPD) window mid-run, so normalization/scoring switched to
+      `openai/gpt-oss-20b` (own per-model TPD window). Recorded in session
+      summary as a config change, not a schema/stage/dependency change.**
 - [x] Scoring call additional input: **Aside from candidate profile + JD, the
       raw resume text is passed into the scoring call so (a) evidence strings
       are grounded in specific resume details and (b) embedded prompt-injection
@@ -291,6 +298,14 @@ assumption that a later end-to-end test will catch everything.
       deviation from the literal '[3] profile + JD' architecture note in
       Section 7, required for Section 8's grounded-evidence rule and Section
       11 case 13; no new stage or schema field was introduced.**
+- [x] Scoring evidence format (added 2026-09-10, Day 4): **When the scoring
+      model switched to `openai/gpt-oss-20b`, the model began copying resume
+      quote-spans verbatim into evidence strings, corrupting the strict-JSON
+      array output (400 json_validate_failed, deterministic at temperature 0,
+      so retries could not recover — seen on resume_04). Fix: RUBRIC_PROMPT
+      EVIDENCE RULES now require paraphrase-only evidence with NO literal
+      double-quote, single-quote, or backslash characters anywhere in an
+      evidence string. Same grounding bar as before; no schema change.**
 - [x] Checkpoint results log — date/time each checkpoint (A-F) passed, and
       anything caught/fixed at that stage:
       - **A — 2026-09-10: PASS. All 13 sample resumes extracted with zero

@@ -17,10 +17,11 @@ Model and runtime settings live in `config.example.yaml` (copied to
 
 ```yaml
 llm:
-  model: openai/gpt-oss-120b
-  temperature: 0.1
-  max_retries: 1
+  model: openai/gpt-oss-20b
+  temperature: 0.0
+  max_retries: 2
   timeout: 60
+  call_interval_s: 40
 ```
 
 ## Running
@@ -54,6 +55,7 @@ python tests/test_pipeline.py --output data/results/latest_test.json
 | `llm.model` | config | Groq model used for normalize + score |
 | `llm.temperature` | config | Sampling temperature (keep low for structured tasks) |
 | `llm.max_retries` | config | LLM-level retries on a failing call |
+| `llm.call_interval_s` | config | Fixed seconds waited before each LLM call (free-tier TPM pacing) |
 | `logging.metrics_file` | config | Where latency/token usage is appended |
 
 ## Modules

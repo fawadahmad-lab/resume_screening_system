@@ -10,11 +10,13 @@ from typing import Any, Dict, Optional
 from pydantic import BaseModel, ValidationError
 
 from src.config import (
+    get_call_interval,
     get_client,
     get_max_retries,
     get_model,
     get_temperature,
     log_metrics,
+    rate_limit_sleep,
 )
 
 logger = logging.getLogger(__name__)
@@ -182,6 +184,7 @@ def normalize_resume(
     ]
 
     raw = ""
+    time.sleep(get_call_interval())
     for attempt in range(get_max_retries() + 1):
         start = time.time()
         try:
@@ -244,6 +247,7 @@ def normalize_resume(
                     f"Normalization failed for candidate {candidate_id} after "
                     f"{get_max_retries() + 1} attempts: {e}"
                 ) from e
+            rate_limit_sleep(e)
 
     raise RuntimeError(
         f"Normalization failed for candidate {candidate_id} after "

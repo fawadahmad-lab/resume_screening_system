@@ -1,8 +1,9 @@
 llm:
-  model: openai/gpt-oss-120b
+  model: openai/gpt-oss-20b
   temperature: 0.0
-  max_retries: 1
+  max_retries: 2
   timeout: 60
+  call_interval_s: 40
 
 pipeline:
   score_ensemble_n: 2

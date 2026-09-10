@@ -7,6 +7,7 @@ and score.py so all LLM calls share the same model settings.
 
 import logging
 import os
+import re
 import time
 from typing import Any, Dict
 
@@ -50,7 +51,7 @@ def get_llm_config() -> Dict[str, Any]:
 
 
 def get_model() -> str:
-    return _LLM_CONFIG.get("model", "openai/gpt-oss-120b")
+    return _LLM_CONFIG.get("model", "openai/gpt-oss-20b")
 
 
 def get_temperature() -> float:
@@ -61,12 +62,33 @@ def get_max_retries() -> int:
     return int(_LLM_CONFIG.get("max_retries", 1))
 
 
+def get_call_interval() -> float:
+    """Seconds to wait before each first LLM attempt (free-tier TPM pacing)."""
+    return float(_LLM_CONFIG.get("call_interval_s", 0.0))
+
+
 def get_timeout() -> int:
     return int(_LLM_CONFIG.get("timeout", 60))
 
 
 def get_metrics_file() -> str:
     return _LOGGING_CONFIG.get("metrics_file", METRICS_FILE)
+
+
+def rate_limit_sleep(exception: Exception) -> None:
+    """Sleep until a Groq 429 rate-limit window closes.
+
+    Groq embeds 'Please try again in Xs' in rate-limit errors. Parse it and
+    sleep X + a small buffer so the next LLM attempt lands in a fresh TPM
+    window (gpt-oss-20b has a tight 8k tokens/min limit). Falls back to a
+    20s sleep if the wait can't be parsed.
+    """
+    try:
+        match = re.search(r"Please try again in ([\d.]+)", str(exception))
+        wait = float(match.group(1)) if match else 20.0
+    except Exception:
+        wait = 20.0
+    time.sleep(wait + 2.0)
 
 
 def get_client():
