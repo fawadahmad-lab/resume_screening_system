@@ -1,0 +1,37 @@
+EMMA WATSON
+emma.watson@email.dev | (503) 555-0144 | Portland, OR
+github.com/emmawatson
+
+SENIOR FRONTEND ENGINEER focused on typed React at scale, accessibility, and
+shipping fast. 9 years across marketplace and fintech products.
+
+Core stack: TypeScript, React, Node, Redux Toolkit, Vite, Playwright,
+Storybook, GitHub Actions, Figma dev handoff, WCAG 2.2.
+
+EXPERIENCE
+
+Senior Frontend Engineer · CheckoutFlow (fintech) · 2022 → now
+- Led migration of a 480k-LOC monolith to a typed React 18 + Redux Toolkit
+  architecture across 5 squads.
+- Built the company design system token pipeline; cut visual regression bugs
+  by ~70% last year.
+- Introduced Playwright E2E coverage on all payment flows; deploys went from
+  weekly to on-merge via GitHub Actions.
+
+Frontend Engineer II · MarketPulse (marketplace) · 2019 → 2022
+- Owned the search & browse experience (React, TypeScript, Next 12) used by
+  3M monthly users.
+- Refactored client state to Redux Toolkit; TTI improved 22% (Lighthouse).
+- Shipped a Storybook-driven component library now used by the whole frontend
+  org.
+
+Frontend Engineer · Launchpad Agency (client work) · 2016 → 2019
+- Built marketing sites and small SaaS tools for ~20 clients using React,
+  vanilla TS, and CSS Modules.
+
+EDUCATION
+B.Sc. Interactive Design · Olin College · 2016
+
+COMMUNITY
+- Maintainer of a TypeScript-utility OSS package (≈1.1k GitHub stars).
+- Co-organizer of PDX Frontend Meetup.

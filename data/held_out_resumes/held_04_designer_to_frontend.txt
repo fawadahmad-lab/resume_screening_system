@@ -1,0 +1,30 @@
+HARPER LI
+harper.li@email.dev | (585) 555-0155 | Rochester, NY
+
+FORMER PRODUCT DESIGNER turned frontend engineer. 4 years of product design
+plus 2 years building in React/TypeScript. Unusually good eye for what
+"pixel-perfect and accessible" really means.
+
+EXPERIENCE
+
+Frontend Developer · CraftCanvas (design tooling startup) · 2023 → now
+- Build the React 18 + TypeScript canvas editor: collab cursors, vector
+  layer panels, keyboard-first UX.
+- Rebuilt our component layer from Emotion to Tailwind; improved render
+  perf on large boards.
+- Work with design on the token/theme system.
+
+Product Designer · NorthWind (B2B SaaS) · 2021 → 2023
+- Designed and prototyped dashboards and onboarding flows in Figma.
+- Learned to code to hand off better; that's what got me the pivot.
+
+UI Design Intern → Associate · Brightpath (mobile agency) · 2019 → 2021
+- Shipped mobile app UI kits; ran usability tests.
+
+EDUCATION
+B.F.A. Interaction Design · RISD · 2019
+Certificate, Frontend Development · freeCodeCamp/self-paced · 2022-2023
+
+SKILLS
+React, TypeScript, JavaScript, Tailwind CSS, Figma (advanced), WCAG,
+Storybook, Vite, Git, testing (RTL basics, learning Cypress)

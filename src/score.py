@@ -8,6 +8,7 @@ injection attempts in the resume are visible and can be ignored.
 
 import json
 import logging
+import statistics
 import time
 from typing import Any, Dict, List, Optional
 
@@ -344,7 +345,7 @@ def ensemble_score(
         return sum(c.score for c in r.criteria_scores)
 
     totals = sorted(_total(r) for r in results)
-    median_total = totals[len(results) // 2]  # len>1 guaranteed here
+    median_total = statistics.median(totals)  # float, unbiased for any n
 
     representative = min(results, key=lambda r: abs(_total(r) - median_total))
     logger.info(

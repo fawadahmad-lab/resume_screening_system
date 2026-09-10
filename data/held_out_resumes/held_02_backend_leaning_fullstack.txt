@@ -1,0 +1,29 @@
+CARLOS MENDOZA
+carlos.mendoza@email.dev | (210) 555-0177 | San Antonio, TX
+
+BACKEND-LEANING FULL-STACK ENGINEER, 7 years. Deep in Node, PostgreSQL, and
+Docker; comfortable in React but frontend is not my day-to-day focus.
+
+EXPERIENCE
+
+Senior Backend Engineer · RelayStream (IoT platform) · 2021 → now
+- Design and operate Node.js + TypeScript microservices on Kubernetes.
+- Postgres schema ownership; led two event-sourcing migrations.
+- Write React admin dashboards occasionally (~10% of my work) using the team
+  template (React + MUI + Vite).
+
+Full-Stack Engineer · Brickline (construction SaaS) · 2018 → 2021
+- 60/40 backend-to-frontend split: Node/Postgres APIs and a React 17 admin
+  app for 400 internal users.
+- Set up CI/CD (GitHub Actions) and the Docker dev environment.
+
+Software Engineer · MedicalRecordsNet (healthcare) · 2016 → 2018
+- Java + Spring API work; some AngularJS maintenance. No professional
+  React/TypeScript here.
+
+EDUCATION
+B.S. Computer Science · University of Texas at San Antonio · 2016
+
+SKILLS
+Node.js, TypeScript, PostgreSQL, Docker, Kubernetes, Git, GitHub Actions,
+REST, GraphQL, React (working), Vite, MUI, Jest (backend focus)

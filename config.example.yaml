@@ -5,7 +5,7 @@ llm:
   timeout: 60
 
 pipeline:
-  score_ensemble_n: 3
+  score_ensemble_n: 2
 
 logging:
   metrics_file: data/results/call_metrics.log

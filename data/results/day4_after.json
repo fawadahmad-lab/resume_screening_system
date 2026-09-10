@@ -1,0 +1,181 @@
+{
+  "summary": {
+    "total_cases": 13,
+    "errors": 13,
+    "matched": 0,
+    "accuracy": 0.0
+  },
+  "comparison": [
+    {
+      "case": 1,
+      "name": "strong_fit_full_match",
+      "expected": "Strong Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 2,
+      "name": "strong_fit_career_changer",
+      "expected": "Possible Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 3,
+      "name": "borderline_missing_key_skill",
+      "expected": "Possible Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 4,
+      "name": "borderline_overqualified",
+      "expected": "Possible Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 5,
+      "name": "not_fit_wrong_domain",
+      "expected": "Not a Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 6,
+      "name": "edge_employment_gap",
+      "expected": "Strong Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 7,
+      "name": "edge_vague_claims",
+      "expected": "Possible Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 8,
+      "name": "edge_sparse_resume",
+      "expected": "Possible Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 9,
+      "name": "edge_long_resume",
+      "expected": "Possible Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 10,
+      "name": "failure_garbled_text",
+      "expected": "Possible Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 11,
+      "name": "failure_unconventional_format",
+      "expected": "Possible Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 12,
+      "name": "adversarial_keyword_stuffed",
+      "expected": "Not a Fit",
+      "actual": "ERROR",
+      "match": false
+    },
+    {
+      "case": 13,
+      "name": "adversarial_prompt_injection",
+      "expected": "Not a Fit",
+      "actual": "ERROR",
+      "match": false
+    }
+  ],
+  "results": [
+    {
+      "case": 1,
+      "name": "strong_fit_full_match",
+      "error": "Normalization failed for candidate resume_01_strong_fit after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 197252, Requested 3113. Please try again in 2m37.68s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Strong Fit"
+    },
+    {
+      "case": 2,
+      "name": "strong_fit_career_changer",
+      "error": "Normalization failed for candidate resume_02_strong_fit_career_changer after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 197251, Requested 3071. Please try again in 2m19.104s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Possible Fit"
+    },
+    {
+      "case": 3,
+      "name": "borderline_missing_key_skill",
+      "error": "Scoring failed for candidate resume_03_borderline_missing_skill after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199070, Requested 1917. Please try again in 7m6.384s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Possible Fit"
+    },
+    {
+      "case": 4,
+      "name": "borderline_overqualified",
+      "error": "Normalization failed for candidate resume_04_borderline_overqualified after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199069, Requested 1162. Please try again in 1m39.792s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Possible Fit"
+    },
+    {
+      "case": 5,
+      "name": "not_fit_wrong_domain",
+      "error": "Normalization failed for candidate resume_05_not_fit_wrong_domain after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199068, Requested 1115. Please try again in 1m19.056s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Not a Fit"
+    },
+    {
+      "case": 6,
+      "name": "edge_employment_gap",
+      "error": "Normalization failed for candidate resume_06_edge_employment_gap after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199068, Requested 2440. Please try again in 10m51.456s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Strong Fit"
+    },
+    {
+      "case": 7,
+      "name": "edge_vague_claims",
+      "error": "Normalization failed for candidate resume_07_edge_vague_claims after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199067, Requested 1078. Please try again in 1m2.639999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Possible Fit"
+    },
+    {
+      "case": 8,
+      "name": "edge_sparse_resume",
+      "error": "Scoring failed for candidate resume_08_edge_sparse after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 200000, Requested 1636. Please try again in 11m46.752s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Possible Fit"
+    },
+    {
+      "case": 9,
+      "name": "edge_long_resume",
+      "error": "Normalization failed for candidate resume_09_edge_long_resume after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199999, Requested 2557. Please try again in 18m24.192s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Possible Fit"
+    },
+    {
+      "case": 10,
+      "name": "failure_garbled_text",
+      "error": "Normalization failed for candidate resume_10_failure_garbled after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199999, Requested 2716. Please try again in 19m32.88s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Possible Fit"
+    },
+    {
+      "case": 11,
+      "name": "failure_unconventional_format",
+      "error": "Normalization failed for candidate resume_11_failure_unconventional_format after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199998, Requested 1841. Please try again in 13m14.448s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Possible Fit"
+    },
+    {
+      "case": 12,
+      "name": "adversarial_keyword_stuffed",
+      "error": "Normalization failed for candidate resume_12_adversarial_keyword_stuffed after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199998, Requested 1211. Please try again in 8m42.288s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Not a Fit"
+    },
+    {
+      "case": 13,
+      "name": "adversarial_prompt_injection",
+      "error": "Normalization failed for candidate resume_13_adversarial_prompt_injection after 2 attempts: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jdekxeyqfk1tb7amhrb70ewx` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199997, Requested 2751. Please try again in 19m47.136s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "gold": "Not a Fit"
+    }
+  ]
+}
