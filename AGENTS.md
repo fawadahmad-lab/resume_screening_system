@@ -173,10 +173,10 @@ including if they're worse than the dev set's.
 ## 12. Coding Conventions
 
 - Language: Python
-- LLM provider: Groq API, model `openai/gpt-oss-20b` (switched from
-  `openai/gpt-oss-120b` on 2026-09-10 when the 120b model hit its 200k
-  tokens/day window mid-Day-4; 20b runs under its own per-model quota),
-  structured output via
+- LLM provider: Groq API, model `openai/gpt-oss-120b` (briefly switched
+  to `openai/gpt-oss-20b` on 2026-09-10 when the 120b model hit its 200k
+  tokens/day window mid-Day-4, then back to 120b — see §16 for the quota
+  history and the automatic Groq→Ollama failover), structured output via
   `response_format` JSON schema (strict mode) — never regex-parse free text
 - Schema validation: Pydantic v2 models mirroring Section 8 exactly
 - Interface: Streamlit
