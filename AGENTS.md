@@ -276,11 +276,42 @@ assumption that a later end-to-end test will catch everything.
 
 ## 16. Open Decisions Log (append here during the build — feeds the AI Collaboration Note)
 
-- [ ] Interface choice: CLI vs. Streamlit — decision + rationale:
-- [ ] Model used for normalization/scoring calls:
-- [ ] Any deviations from this spec and why:
-- [ ] Checkpoint results log — date/time each checkpoint (A-F) passed, and
+- [x] Interface choice: CLI vs. Streamlit — decision + rationale:
+      **Both. CLI (`src/pipeline.py`) is the primary batch entry point used by
+      the eval suite; `app.py` Streamlit UI is the recruiter-facing interface.**
+- [x] Model used for normalization/scoring calls:
+      **Groq API, `openai/gpt-oss-120b`, structured output in strict mode
+      (`response_format` JSON schema). Micro-decisions: all LLM calls share a
+      single cached Groq client (`src/config.py`), latency/token logging since
+      Phase 4 to `data/results/call_metrics.log`.**
+- [x] Scoring call additional input: **Aside from candidate profile + JD, the
+      raw resume text is passed into the scoring call so (a) evidence strings
+      are grounded in specific resume details and (b) embedded prompt-injection
+      text is visible to the scorer as untrusted content (case 13). This is a
+      deviation from the literal '[3] profile + JD' architecture note in
+      Section 7, required for Section 8's grounded-evidence rule and Section
+      11 case 13; no new stage or schema field was introduced.**
+- [x] Checkpoint results log — date/time each checkpoint (A-F) passed, and
       anything caught/fixed at that stage:
+      - **A — 2026-09-10: PASS. All 13 sample resumes extracted with zero
+        exceptions/empty outputs; raw text manually inspected for 3 files.**
+      - **B — 2026-09-10: PASS. Normalized 5 resumes incl. garbled + injection
+        cases; every extracted field programmatically traced to source text
+        (no hallucination). Garbled text preserved verbatim typo
+        "TypeScript→TyepScript"); injection resume extracted cleanly with no
+        fabricated skills.**
+      - **C — 2026-09-10: PASS. Scored 3 cases; every evidence string manually
+        verified against source resume. Prompt-injection case scored Not a Fit
+        (total 3), ignoring the embedded instruction.**
+      - **D — 2026-09-10: PASS (7/13 = 53.8% agreement with gold labels).
+        Baseline `data/results/day3_baseline.json` saved, never to be
+        overwritten. All 6 mismatches were judgment-call edge cases with no
+        evidence fabrication: (2) career changer → Not a Fit, (4) overqualified
+        → Strong Fit [rubric has no overqualification channel], (6) explained
+        gap → Possible Fit [title + minor red-flag penalties], (7) vague claims
+        → Strong Fit but auto-flagged at boundary-8, (8) sparse → Not a Fit,
+        (9) long/VP resume → Not a Fit. Adversarial 12/13 and wrong-domain 5
+        all correct.**
 - [ ] Proxy-user feedback (Checkpoint D2) — what they got confused by, what
       changed in response:
 - [ ] Held-out set results (Checkpoint E) — how they compared to the dev
