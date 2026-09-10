@@ -3,3 +3,11 @@
 2026-09-10 11:49:49 stage=normalize candidate=resume_08_edge_sparse model=openai/gpt-oss-120b latency=1.73s tokens_in=661 tokens_out=600
 2026-09-10 11:49:51 stage=normalize candidate=resume_10_failure_garbled model=openai/gpt-oss-120b latency=2.03s tokens_in=788 tokens_out=695
 2026-09-10 11:49:53 stage=normalize candidate=resume_13_adversarial_prompt_injection model=openai/gpt-oss-120b latency=1.83s tokens_in=823 tokens_out=624
+2026-09-10 11:51:43 stage=normalize candidate=resume_01_strong_fit model=openai/gpt-oss-120b latency=2.39s tokens_in=1015 tokens_out=781
+2026-09-10 11:51:45 stage=score candidate=resume_01_strong_fit model=openai/gpt-oss-120b latency=2.65s tokens_in=1975 tokens_out=1020
+2026-09-10 11:51:47 stage=normalize candidate=resume_05_not_fit_wrong_domain model=openai/gpt-oss-120b latency=2.03s tokens_in=887 tokens_out=740
+2026-09-10 11:51:50 stage=score candidate=resume_05_not_fit_wrong_domain model=openai/gpt-oss-120b latency=2.65s tokens_in=1791 tokens_out=959
+2026-09-10 11:52:17 stage=normalize candidate=resume_13_adversarial_prompt_injection model=openai/gpt-oss-120b latency=27.33s tokens_in=823 tokens_out=670
+2026-09-10 11:52:20 stage=score candidate=resume_13_adversarial_prompt_injection model=openai/gpt-oss-120b latency=2.75s tokens_in=1704 tokens_out=1066
+2026-09-10 11:52:55 stage=normalize candidate=resume_03 model=openai/gpt-oss-120b latency=4.16s tokens_in=859 tokens_out=758
+2026-09-10 11:52:59 stage=score candidate=resume_03 model=openai/gpt-oss-120b latency=3.89s tokens_in=1767 tokens_out=1238
