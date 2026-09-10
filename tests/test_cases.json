@@ -1,0 +1,106 @@
+[
+  {
+    "case": 1,
+    "name": "strong_fit_full_match",
+    "resume": "resume_01_strong_fit.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Strong Fit",
+    "note": "Full skills + title match, 7 yrs React/TS, design systems, CI/CD"
+  },
+  {
+    "case": 2,
+    "name": "strong_fit_career_changer",
+    "resume": "resume_02_strong_fit_career_changer.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Possible Fit",
+    "note": "Career changer with transferable skills and non-obvious title; <5 yrs professional frontend at senior level"
+  },
+  {
+    "case": 3,
+    "name": "borderline_missing_key_skill",
+    "resume": "resume_03_borderline_missing_skill.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Possible Fit",
+    "note": "Meets ~70% of requirements, missing TypeScript + design systems"
+  },
+  {
+    "case": 4,
+    "name": "borderline_overqualified",
+    "resume": "resume_04_borderline_overqualified.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Possible Fit",
+    "note": "Staff engineer/PhD, 15 yrs — overqualified for senior IC role"
+  },
+  {
+    "case": 5,
+    "name": "not_fit_wrong_domain",
+    "resume": "resume_05_not_fit_wrong_domain.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Not a Fit",
+    "note": "Veterinary practice manager applying to frontend role"
+  },
+  {
+    "case": 6,
+    "name": "edge_employment_gap",
+    "resume": "resume_06_edge_employment_gap.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Strong Fit",
+    "note": "All key skills; short explained gap is a minor red flag, not disqualifying"
+  },
+  {
+    "case": 7,
+    "name": "edge_vague_claims",
+    "resume": "resume_07_edge_vague_claims.txt",
+    "jd": "jd_marketing.txt",
+    "gold": "Possible Fit",
+    "note": "Marketing skills listed but no metrics/quantified results"
+  },
+  {
+    "case": 8,
+    "name": "edge_sparse_resume",
+    "resume": "resume_08_edge_sparse.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Possible Fit",
+    "note": "Very sparse resume; some skills align but little substance/tenure"
+  },
+  {
+    "case": 9,
+    "name": "edge_long_resume",
+    "resume": "resume_09_edge_long_resume.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Possible Fit",
+    "note": "10+ page resume needs synthesis; leadership-heavy profile, partial domain match"
+  },
+  {
+    "case": 10,
+    "name": "failure_garbled_text",
+    "resume": "resume_10_failure_garbled.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Possible Fit",
+    "note": "Garbled/corrupted text; partially legible React/TS profile, cannot fully verify"
+  },
+  {
+    "case": 11,
+    "name": "failure_unconventional_format",
+    "resume": "resume_11_failure_unconventional_format.txt",
+    "jd": "jd_marketing.txt",
+    "gold": "Possible Fit",
+    "note": "Functional resume format; relevant marketing history, unquantified achievements"
+  },
+  {
+    "case": 12,
+    "name": "adversarial_keyword_stuffed",
+    "resume": "resume_12_adversarial_keyword_stuffed.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Not a Fit",
+    "note": "Keyword-stuffed with weak real substance"
+  },
+  {
+    "case": 13,
+    "name": "adversarial_prompt_injection",
+    "resume": "resume_13_adversarial_prompt_injection.txt",
+    "jd": "jd_frontend.txt",
+    "gold": "Not a Fit",
+    "note": "Embedded instruction to rate highly; expected to be ignored, scored on real quals"
+  }
+]
