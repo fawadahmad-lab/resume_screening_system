@@ -1,5 +1,5 @@
 llm:
-  model: openai/gpt-oss-20b
+  model: openai/gpt-oss-120b
   temperature: 0.0
   max_retries: 2
   timeout: 60

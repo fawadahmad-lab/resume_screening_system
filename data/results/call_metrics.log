@@ -151,3 +151,9 @@
 2026-09-10 14:30:26 stage=normalize candidate=resume_13_adversarial_prompt_injection model=openai/gpt-oss-20b latency=1.45s tokens_in=1046 tokens_out=755
 2026-09-10 14:36:43 stage=normalize candidate=resume_02_strong_fit_career_changer model=openai/gpt-oss-20b latency=3.32s tokens_in=1196 tokens_out=891
 2026-09-10 14:48:37 stage=normalize candidate=resume_13_adversarial_prompt_injection model=openai/gpt-oss-20b latency=1.47s tokens_in=1046 tokens_out=786
+2026-09-10 15:08:56 stage=normalize candidate=resume_01_strong_fit model=openai/gpt-oss-20b latency=1.64s tokens_in=1238 tokens_out=951
+2026-09-10 15:16:25 stage=normalize candidate=resume_01_strong_fit model=openai/gpt-oss-120b latency=2.10s tokens_in=1238 tokens_out=757
+2026-09-10 15:17:08 stage=score candidate=resume_01_strong_fit model=openai/gpt-oss-120b latency=2.68s tokens_in=2178 tokens_out=977
+2026-09-10 15:17:50 stage=score candidate=resume_01_strong_fit model=openai/gpt-oss-120b latency=2.38s tokens_in=2178 tokens_out=889
+2026-09-10 15:18:32 stage=normalize candidate=resume_02_strong_fit_career_changer model=openai/gpt-oss-120b latency=1.97s tokens_in=1196 tokens_out=638
+2026-09-10 15:23:02 stage=score candidate=resume_02_strong_fit_career_changer model=openai/gpt-oss-120b latency=45.84s tokens_in=2128 tokens_out=1373

@@ -283,17 +283,18 @@ assumption that a later end-to-end test will catch everything.
       **Both. CLI (`src/pipeline.py`) is the primary batch entry point used by
       the eval suite; `app.py` Streamlit UI is the recruiter-facing interface.**
 - [x] Model used for normalization/scoring calls:
-      **Groq API, `openai/gpt-oss-20b`, structured output in strict mode
-      (`response_format` JSON schema). Micro-decisions: all LLM calls share a
-      single cached Groq client (`src/config.py`), latency/token logging since
-      Phase 4 to `data/results/call_metrics.log`. Model was initially
-      `openai/gpt-oss-120b`; on Day 4 the 120b model exhausted its 200k
-      tokens/day (TPD) window mid-run, so normalization/scoring switched to
-      `openai/gpt-oss-20b` (own per-model TPD window). Recorded in session
-      summary as a config change, not a schema/stage/dependency change.
-      gpt-oss-20b has a tight **8k tokens/min** (TPM) window plus 200k
-      tokens/day; to run the 13-case dev suite without fatal 429s we added
-      `llm.call_interval_s: 40` fixed pacing of every LLM call,
+      **Groq API, `openai/gpt-oss-120b`, structured output in strict mode
+      (`response_format` JSON schema). Note: the model was switched to
+      `openai/gpt-oss-20b` mid-Day-4 when the 120b model exhausted its 200k
+      tokens/day (TPD) window (see below), then switched BACK to 120b ~2h
+      later when the 120b TPD window refilled and the 20b model exhausted its
+      own window (free=198) — the 20b detour was purely quota-driven and the
+      E3/E4 (Checkpoint E) runs used `openai/gpt-oss-120b`. Micro-decisions:
+      all LLM calls share a single cached Groq client (`src/config.py`),
+      latency/token logging since Phase 4 to `data/results/call_metrics.log`.
+      gpt-oss-120b free tier has a tight **8k tokens/min** (TPM) window plus
+      200k tokens/day; to run the 13-case dev suite without fatal 429s we
+      added `llm.call_interval_s: 40` fixed pacing of every LLM call,
       `rate_limit_sleep()` (parse 'Please try again in Xs/Xm' from Groq
       errors and wait out the window between retry attempts), and
       `llm.max_retries: 2`. Both free-tier TPD windows slided down during the
