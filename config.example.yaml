@@ -1,12 +1,20 @@
 llm:
+  # groq | auto | ollama
+  #   groq   = always Groq (raise if TPD exhausted)
+  #   auto   = Groq first, fail over to Ollama on daily-token exhaustion
+  #   ollama = always Ollama (https://ollama.com, OLLAMA_API_KEY)
+  provider: auto
   model: openai/gpt-oss-120b
   temperature: 0.0
   max_retries: 2
   timeout: 60
   call_interval_s: 40
+  verbose: false
+  ollama_host: https://ollama.com
+  ollama_model: gpt-oss:120b
 
 pipeline:
-  score_ensemble_n: 2
+  score_ensemble_n: 3
 
 logging:
   metrics_file: data/results/call_metrics.log

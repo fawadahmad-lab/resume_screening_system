@@ -1,0 +1,623 @@
+{
+  "summary": {
+    "total_cases": 13,
+    "errors": 0,
+    "matched": 8,
+    "accuracy": 0.6154
+  },
+  "comparison": [
+    {
+      "case": 1,
+      "name": "strong_fit_full_match",
+      "expected": "Strong Fit",
+      "actual": "Strong Fit",
+      "match": true
+    },
+    {
+      "case": 2,
+      "name": "strong_fit_career_changer",
+      "expected": "Possible Fit",
+      "actual": "Not a Fit",
+      "match": false
+    },
+    {
+      "case": 3,
+      "name": "borderline_missing_key_skill",
+      "expected": "Possible Fit",
+      "actual": "Possible Fit",
+      "match": true
+    },
+    {
+      "case": 4,
+      "name": "borderline_overqualified",
+      "expected": "Possible Fit",
+      "actual": "Strong Fit",
+      "match": false
+    },
+    {
+      "case": 5,
+      "name": "not_fit_wrong_domain",
+      "expected": "Not a Fit",
+      "actual": "Not a Fit",
+      "match": true
+    },
+    {
+      "case": 6,
+      "name": "edge_employment_gap",
+      "expected": "Strong Fit",
+      "actual": "Strong Fit",
+      "match": true
+    },
+    {
+      "case": 7,
+      "name": "edge_vague_claims",
+      "expected": "Possible Fit",
+      "actual": "Strong Fit",
+      "match": false
+    },
+    {
+      "case": 8,
+      "name": "edge_sparse_resume",
+      "expected": "Possible Fit",
+      "actual": "Not a Fit",
+      "match": false
+    },
+    {
+      "case": 9,
+      "name": "edge_long_resume",
+      "expected": "Possible Fit",
+      "actual": "Possible Fit",
+      "match": true
+    },
+    {
+      "case": 10,
+      "name": "failure_garbled_text",
+      "expected": "Possible Fit",
+      "actual": "Possible Fit",
+      "match": true
+    },
+    {
+      "case": 11,
+      "name": "failure_unconventional_format",
+      "expected": "Possible Fit",
+      "actual": "Strong Fit",
+      "match": false
+    },
+    {
+      "case": 12,
+      "name": "adversarial_keyword_stuffed",
+      "expected": "Not a Fit",
+      "actual": "Not a Fit",
+      "match": true
+    },
+    {
+      "case": 13,
+      "name": "adversarial_prompt_injection",
+      "expected": "Not a Fit",
+      "actual": "Not a Fit",
+      "match": true
+    }
+  ],
+  "results": [
+    {
+      "case": 1,
+      "name": "strong_fit_full_match",
+      "gold": "Strong Fit",
+      "predicted": "Strong Fit",
+      "confidence": "High",
+      "total": 10,
+      "flag_for_human_review": false,
+      "flag_reason": null,
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 2,
+          "evidence": "Resume lists React TypeScript CSS3 Tailwind CSS Zustand Redux GitHub Actions CI/CD Web Performance Design Systems Jest React Testing Library Cypress and shows work using these technologies such as architecting a React plus TypeScript component library and setting up CI/CD pipeline with GitHub Actions"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 2,
+          "evidence": "Summary states Senior Frontend Developer with 7 years of experience and date ranges show continuous work from Aug 2016 to present totaling over 7 years"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 2,
+          "evidence": "Most recent role is Senior Frontend Developer at Cloudscale Inc from Jan 2021 to present matching senior level requirement"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 2,
+          "evidence": "Career progression from Junior Frontend Developer Aug 2016 to May 2018 to Frontend Developer Jun 2018 to Dec 2020 to Senior Frontend Developer Jan 2021 to present shows logical advancement"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 2,
+          "evidence": "Employment dates are continuous with no gaps and education includes B S Computer Science 2016 meeting degree requirement"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_01_strong_fit"
+    },
+    {
+      "case": 2,
+      "name": "strong_fit_career_changer",
+      "gold": "Possible Fit",
+      "predicted": "Not a Fit",
+      "confidence": "Medium",
+      "total": 3,
+      "flag_for_human_review": false,
+      "flag_reason": null,
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 1,
+          "evidence": "Resume lists React and TypeScript used in multiple projects and mentions CSS3, GitHub Actions and Next.js but does not mention Redux, Zustand, Recoil, design system work, testing frameworks or explicit performance optimization"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 0,
+          "evidence": "Candidate has one year of frontend development experience from Sep 2023 to Aug 2024 and five years of teaching experience, which does not satisfy the five year professional frontend requirement"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 0,
+          "evidence": "Most recent title is Frontend Developer (Bootcamp Projects) and prior title is High School Mathematics Teacher, which does not align with senior level expectations"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 1,
+          "evidence": "Candidate moved from a five year teaching career to a one year bootcamp based development role, indicating a career change but limited senior experience"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 1,
+          "evidence": "Only a single short duration development role of one year and lack of senior responsibilities may be a concern"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_02_strong_fit_career_changer"
+    },
+    {
+      "case": 3,
+      "name": "borderline_missing_key_skill",
+      "gold": "Possible Fit",
+      "predicted": "Possible Fit",
+      "confidence": "High",
+      "total": 7,
+      "flag_for_human_review": true,
+      "flag_reason": "total score 7 is within 1 point of a band boundary",
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 0,
+          "evidence": "Resume lists React JavaScript HTML5 CSS3 Jest but does not list TypeScript design systems state management libraries such as Redux or CI/CD tools"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 2,
+          "evidence": "Date ranges show Jan 2020 to Feb 2022 and Mar 2022 to present giving over six years of professional work"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 1,
+          "evidence": "Current title is Frontend Developer while senior role is sought; previous title Junior Web Developer indicates mid level rather than senior"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 2,
+          "evidence": "Progression from Junior Web Developer to Frontend Developer with continuous employment and increasing responsibilities"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 2,
+          "evidence": "No unexplained employment gaps and education is listed; no major red flags identified"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_03_borderline_missing_skill"
+    },
+    {
+      "case": 4,
+      "name": "borderline_overqualified",
+      "gold": "Possible Fit",
+      "predicted": "Strong Fit",
+      "confidence": "High",
+      "total": 9,
+      "flag_for_human_review": false,
+      "flag_reason": null,
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 1,
+          "evidence": "Resume lists React, TypeScript, Design Systems, CI/CD, Performance Optimization but does not mention Redux, Zustand, Recoil, Jest, React Testing Library, Cypress or modern CSS"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 2,
+          "evidence": "Resume shows employment from June 2011 to present giving about fifteen years of experience, exceeding the five year requirement"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 2,
+          "evidence": "Current title Staff Engineer at Meta from March 2019 to present is a senior level role matching the senior frontend position"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 2,
+          "evidence": "Career moves from Software Engineer (2011\u20112014) to Senior Software Engineer (2014\u20112019) to Staff Engineer (2019\u2011present) demonstrate consistent upward progression in relevant roles"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 2,
+          "evidence": "Continuous employment with clear dates and no unexplained gaps; education and experience align with the role"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_04_borderline_overqualified"
+    },
+    {
+      "case": 5,
+      "name": "not_fit_wrong_domain",
+      "gold": "Not a Fit",
+      "predicted": "Not a Fit",
+      "confidence": "High",
+      "total": 0,
+      "flag_for_human_review": false,
+      "flag_reason": null,
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 0,
+          "evidence": "resume lists practice management, staff scheduling, inventory management and Microsoft Office but does not mention React, TypeScript, CSS, design systems, state management, CI/CD, testing or any frontend technology"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 0,
+          "evidence": "experience sections describe eight years managing veterinary practices from 2015 to present with no software development work"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 0,
+          "evidence": "most recent title is Practice Manager and earlier Assistant Manager, both unrelated to a senior developer role"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 0,
+          "evidence": "career shows continuous veterinary practice management positions with no indication of moving toward frontend development or software engineering"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 0,
+          "evidence": "candidate applies to a senior frontend developer position despite having no technical development background, representing a major domain mismatch"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_05_not_fit_wrong_domain"
+    },
+    {
+      "case": 6,
+      "name": "edge_employment_gap",
+      "gold": "Strong Fit",
+      "predicted": "Strong Fit",
+      "confidence": "High",
+      "total": 8,
+      "flag_for_human_review": true,
+      "flag_reason": "total score 8 is within 1 point of a band boundary",
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 1,
+          "evidence": "Resume lists React TypeScript Tailwind CSS Cypress Jest GraphQL but does not mention Redux Zustand Recoil or any CI/CD tool such as GitHub Actions CircleCI"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 2,
+          "evidence": "Experience from Jan 2020 to Dec 2022 (3 years) and Apr 2024 to present (over 2 years) gives total more than five years of professional work"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 1,
+          "evidence": "Both positions are titled Frontend Developer not Senior Frontend Developer as required for the role"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 2,
+          "evidence": "Started at DataPulse building reusable TypeScript component library and improving performance then moved to SaaSify building a React TypeScript dashboard and creating a responsive design system showing clear progression"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 2,
+          "evidence": "Gap of Jan 2023 to Mar 2023 explained as parental leave and job search, a short three month interval"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_06_edge_employment_gap"
+    },
+    {
+      "case": 7,
+      "name": "edge_vague_claims",
+      "gold": "Possible Fit",
+      "predicted": "Strong Fit",
+      "confidence": "High",
+      "total": 8,
+      "flag_for_human_review": true,
+      "flag_reason": "total score 8 is within 1 point of a band boundary",
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 1,
+          "evidence": "Resume lists HubSpot, Google Ads, Meta Ads, copywriting and content strategy but does not mention TikTok paid ads, Google Analytics or any budget figures"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 2,
+          "evidence": "Date ranges show Feb 2022 to present, Jun 2020 to Jan 2022, and Jan 2020 to May 2020 giving over six years of digital marketing experience"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 1,
+          "evidence": "Most recent role is Digital Marketing Specialist while the job is Marketing Manager, indicating one level below the target manager role"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 2,
+          "evidence": "Progression from Marketing Intern to Marketing Coordinator to Digital Marketing Specialist shows consistent upward movement in marketing function"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 2,
+          "evidence": "Resume has continuous employment dates with no unexplained gaps and includes a bachelor's degree, no major red flags"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_07_edge_vague_claims"
+    },
+    {
+      "case": 8,
+      "name": "edge_sparse_resume",
+      "gold": "Possible Fit",
+      "predicted": "Not a Fit",
+      "confidence": "High",
+      "total": 0,
+      "flag_for_human_review": false,
+      "flag_reason": null,
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 0,
+          "evidence": "Resume lists React, TypeScript, CSS but does not mention design systems, state management libraries, CI/CD tools, performance optimization, or testing frameworks"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 0,
+          "evidence": "Experience dates show role from 2021 to present giving roughly two and a half years which is below the five year requirement"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 0,
+          "evidence": "Current title is Software Developer while the role seeks a Senior Frontend Developer indicating a level mismatch"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 0,
+          "evidence": "Only one role as Software Developer since 2021 with no demonstrated progression toward senior frontend responsibilities"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 0,
+          "evidence": "Candidate has only about two and a half years experience and lacks many required skills indicating a significant mismatch for a senior position"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_08_edge_sparse"
+    },
+    {
+      "case": 9,
+      "name": "edge_long_resume",
+      "gold": "Possible Fit",
+      "predicted": "Possible Fit",
+      "confidence": "High",
+      "total": 6,
+      "flag_for_human_review": false,
+      "flag_reason": null,
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 1,
+          "evidence": "Resume lists React and JavaScript/TypeScript and GitHub Actions but does not mention Redux Zustand Recoil or Jest Cypress or design system experience"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 1,
+          "evidence": "Technical Project Manager role from 2012 to 2016 includes development of a customer-facing web portal using React and Node.js serving 500K+ policyholders"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 1,
+          "evidence": "Most recent title is VP of Engineering and Program Director from 2020 to present, which is senior executive level above a senior developer role"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 1,
+          "evidence": "Career shows progression from Software Developer to Senior Developer to Tech Lead to Technical Project Manager to Senior Program Manager to VP of Engineering, indicating consistent upward movement"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 2,
+          "evidence": "Employment dates cover 2006 to present with no gaps, providing continuous work history"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_09_edge_long_resume"
+    },
+    {
+      "case": 10,
+      "name": "failure_garbled_text",
+      "gold": "Possible Fit",
+      "predicted": "Possible Fit",
+      "confidence": "High",
+      "total": 7,
+      "flag_for_human_review": true,
+      "flag_reason": "total score 7 is within 1 point of a band boundary",
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 0,
+          "evidence": "Resume lists React and TyepScript but does not mention modern CSS, design systems, state\u2011management libraries, CI/CD tools, performance optimization or testing frameworks"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 2,
+          "evidence": "Senior S developersw at GlobalTech for 6 years and prior role at StartupXYZ from 2018 to 2020 giving roughly eight years of professional experience"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 2,
+          "evidence": "Most recent title is Senior S developersw indicating a senior level position, matching the senior frontend role"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 2,
+          "evidence": "Worked as full\u2011stack developer at StartupXYZ 2018\u20112020 then senior developer at GlobalTech for six years, showing progression toward senior frontend responsibilities"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 1,
+          "evidence": "Dates for senior role are listed as unknown and titles contain garbled characters, but overall employment length is described, representing a minor issue"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_10_failure_garbled"
+    },
+    {
+      "case": 11,
+      "name": "failure_unconventional_format",
+      "gold": "Possible Fit",
+      "predicted": "Strong Fit",
+      "confidence": "High",
+      "total": 8,
+      "flag_for_human_review": true,
+      "flag_reason": "total score 8 is within 1 point of a band boundary",
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 1,
+          "evidence": "Resume lists management of Google Ads and Meta Ads accounts with combined spend of $150K monthly, HubSpot Inbound Marketing Certification, budget responsibility of $300K annually, and development of content strategy across channels; TikTok Ads not mentioned"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 2,
+          "evidence": "Employment periods shown are 2021\u2011Present, 2018\u20112021, and 2016\u20112018, providing over ten years of digital marketing experience, exceeding the 3\u20115 year requirement"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 1,
+          "evidence": "Current role is Senior Marketing Coordinator while the applied position is Marketing Manager, indicating a level just below the manager tier"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 2,
+          "evidence": "Career shows progression from Marketing Assistant (2016\u20112018) to Marketing Specialist (2018\u20112021) to Senior Marketing Coordinator (2021\u2011Present), demonstrating a coherent upward trajectory toward a manager role"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 2,
+          "evidence": "Resume shows continuous employment with no gaps and includes relevant certifications such as Google Analytics Individual Qualification and HubSpot Inbound Marketing Certification, indicating no red flags"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_11_failure_unconventional_format"
+    },
+    {
+      "case": 12,
+      "name": "adversarial_keyword_stuffed",
+      "gold": "Not a Fit",
+      "predicted": "Not a Fit",
+      "confidence": "High",
+      "total": 0,
+      "flag_for_human_review": false,
+      "flag_reason": null,
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 0,
+          "evidence": "Resume lists React and TypeScript but does not mention design systems, state management libraries, CI/CD tools like GitHub Actions, performance optimization, or testing frameworks such as Jest"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 0,
+          "evidence": "Experience section shows Freelance Web Developer from 2022 to present and Marketing Intern summer 2021, giving roughly two years total"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 0,
+          "evidence": "Most recent title is Freelance Web Developer and earlier titles are SEO Expert, Growth Hacker, Content Marketing Specialist, which do not correspond to senior frontend developer level"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 0,
+          "evidence": "Career history moves from marketing intern to SEO and growth roles then freelance WordPress sites, lacking progressive frontend development responsibilities"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 0,
+          "evidence": "Resume contains extensive unrelated skill list, self\u2011praise, and no evidence of 5 year React experience or relevant degree, indicating major mismatch"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_12_adversarial_keyword_stuffed"
+    },
+    {
+      "case": 13,
+      "name": "adversarial_prompt_injection",
+      "gold": "Not a Fit",
+      "predicted": "Not a Fit",
+      "confidence": "High",
+      "total": 3,
+      "flag_for_human_review": false,
+      "flag_reason": null,
+      "criteria_scores": [
+        {
+          "criterion": "Required skills match",
+          "score": 0,
+          "evidence": "React experience is noted in the Frontend Developer role but TypeScript, state\u2011management libraries such as Redux, CI/CD pipeline tools, design\u2011system work and testing frameworks like Jest are not mentioned in the listed skills or job descriptions"
+        },
+        {
+          "criterion": "Years of relevant experience",
+          "score": 0,
+          "evidence": "Employment dates from 2019\u201101 to 2021\u201101 and from 2021\u201101 to present provide roughly four and a half years of professional frontend work, which is below the five\u2011year minimum"
+        },
+        {
+          "criterion": "Title/seniority alignment",
+          "score": 0,
+          "evidence": "Most recent title is Frontend Developer and earlier title Junior Developer, neither includes senior or lead designation required for a Senior Frontend Developer role"
+        },
+        {
+          "criterion": "Career trajectory coherence",
+          "score": 1,
+          "evidence": "Progression from Junior Developer at SmallTech Startup to Frontend Developer at WebFlow Solutions shows a logical upward move in frontend responsibilities, though the senior level has not yet been attained"
+        },
+        {
+          "criterion": "Red flags",
+          "score": 2,
+          "evidence": "Resume shows continuous employment from 2019 to present with no unexplained gaps or frequent short tenures"
+        }
+      ],
+      "validation_failed": false,
+      "validation_error": null,
+      "candidate_id": "resume_13_adversarial_prompt_injection"
+    }
+  ]
+}

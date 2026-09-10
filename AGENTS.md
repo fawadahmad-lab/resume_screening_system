@@ -289,8 +289,18 @@ assumption that a later end-to-end test will catch everything.
       tokens/day (TPD) window (see below), then switched BACK to 120b ~2h
       later when the 120b TPD window refilled and the 20b model exhausted its
       own window (free=198) — the 20b detour was purely quota-driven and the
-      E3/E4 (Checkpoint E) runs used `openai/gpt-oss-120b`. Micro-decisions:
-      all LLM calls share a single cached Groq client (`src/config.py`),
+      E3/E4 (Checkpoint E) runs used `openai/gpt-oss-120b`. NEW 2026-09-10:
+      an automatic live-failover provider was added — `llm.provider` accepts
+      `groq` (default), `auto`, or `ollama`. `auto` starts on Groq and, on a
+      detected Groq DAILY-token (TPD) exhaustion, permanently fails over to a
+      hosted Ollama endpoint (`https://ollama.com`, `OLLAMA_API_KEY`, model
+      `gpt-oss:120b` via the `ollama/pypi` package, added to
+      requirements.txt) for the remainder of the process; normalize/score
+      keep their Groq-style `chat.completions.create` call shape through a
+      thin compat adapter (`src/config.py`), so all modules stay provider-
+      agnostic. Ollama verified 2026-09-10: returns strict-JSON replies for
+      both NORMALIZE_SCHEMA and SCORING_SCHEMA at temperature 0. Micro-decisions:
+      all LLM calls share a single cached client (`src/config.py`),
       latency/token logging since Phase 4 to `data/results/call_metrics.log`.
       gpt-oss-120b free tier has a tight **8k tokens/min** (TPM) window plus
       200k tokens/day; to run the 13-case dev suite without fatal 429s we
@@ -315,7 +325,59 @@ assumption that a later end-to-end test will catch everything.
       so retries could not recover — seen on resume_04). Fix: RUBRIC_PROMPT
       EVIDENCE RULES now require paraphrase-only evidence with NO literal
       double-quote, single-quote, or backslash characters anywhere in an
-      evidence string. Same grounding bar as before; no schema change.**
+      evidence string. Same grounding bar as before; no schema change.
+      Post-fix attribution check (2026-09-10, individual cases 10/11/13 on
+      gpt-oss-120b): the paraphrase rule itself is NOT implicated in the
+      case 10/11/13 regressions vs day3_baseline (see FORMAT RULES entry);
+      it is retained as hardening.**
+- [x] FORMAT RULES prompt additions (added 2026-09-10, Day 4 as part of the
+      20b-evidence hardening commit 9dc5952; NARROWED 2026-09-10 after
+      regression investigation): **Two FORMAT RULES were added to the
+      RUBRIC_PROMPT alongside the paraphrase rule: Rule 1 said application-
+      form header lines ('APPLICATION:', 'POSITION:', 'RE:', 'REF:') are
+      document metadata, NOT job titles — ignore them in title/seniority
+      alignment; Rule 2 said a profile date_range with 'unknown' start/end
+      means the ROLE was visible but dates were unreadable — count explicit
+      duration hints as years-of-experience evidence and do not treat the
+      role as a gap or zero-duration. Why: Checkpoint D (day3) flagged
+      cases 10 (garbled) and 11 (unconventional format) as the two failure
+      cases most sensitive to date/title mis-parsing, and these rules were
+      meant to harden those two. REGRESSION CAUGHT: the day3->day4
+      before/after diff (2026-09-10) showed cases 10 and 11 each regressed
+      7->8 (Possible Fit -> Strong Fit) via a single moved criterion,
+      Red flags 1->2, with evidence strings quoting the new FORMAT RULES
+      verbatim; case 13 regressed 2->5 due to run-to-run variance (proven
+      by 4 identical-config runs scoring 2/5/6/7; run 1 reproduced the
+      baseline exactly). Decision: NARROWED Rule 1 (Rule 2 kept as-is): the
+      header's title is now treated strictly as the applied-for target role
+      (NOT a held title/date-range), header lines are ignored for date
+      parsing, and the model MAY still note a header-vs-actual-title
+      discrepancy (e.g. applying for Manager while holding Coordinator) as a
+      level-misalignment red-flag signal — preserving the baseline's
+      discrepancy-check while removing the over-suppression that had flipped
+      case 11's red-flags to 2. VERIFIED (2026-09-10, narrowed-rule suite,
+      n=1 to match day3 baseline method): agreement rose 7/13 -> 8/13
+      (53.8% -> 61.5%), zero errors; previously-missed cases 6, 9, 10 all
+      now PASS; one collateral regress: case 11 (Possible -> Strong, Red
+      flags 1->2 again — the header discrepancy is no longer being raised as
+      a red flag even though the prompt permits it). Case 13 at n=1 now
+      scores Not a Fit 3 (gold match). E3/E4 held until the narrowed-rule
+      suite diff + n=3 stability check are reported.**
+- [x] Scoring ensemble (changed 2026-09-10, Day 4): **`score_ensemble_n`
+      bumped to 3 with MAJORITY-VOTE aggregation on `overall_fit` (was:
+      median criteria-total representative), used as the case-13
+      variance-stability fix. Rationale: 4 identical-config case-13 runs
+      scored 2/5/6/7 — a 3-way median-of-one representative cannot stabilize
+      a bimodal label distribution; majority label vote (with median-total
+      tie-break inside the winning label group) is the correct weak signal
+      to aggregate. VERIFIED (2026-09-10): 3 fresh case-13 runs under n=3
+      majority all converged to Possible Fit (totals 6,5,7) — case 13 is
+      now STABLE at Possible Fit. NOTE: this stabilizes the label but the
+      converged label (Possible Fit) still disagrees with gold (Not a Fit)
+      — the residual case-13 gold-mismatch is a judgment-call issue (the
+      model sees continuous 2019-present employment + no missing-date red
+      flags as acceptable; gold requires Not a Fit because of depth of
+      claimed-but-unsubstantiated frontend breadth), NOT instability.**
 - [x] Checkpoint results log — date/time each checkpoint (A-F) passed, and
       anything caught/fixed at that stage:
       - **A — 2026-09-10: PASS. All 13 sample resumes extracted with zero
@@ -337,7 +399,19 @@ assumption that a later end-to-end test will catch everything.
         → Strong Fit but auto-flagged at boundary-8, (8) sparse → Not a Fit,
         (9) long/VP resume → Not a Fit. Adversarial 12/13 and wrong-domain 5
         all correct.**
-- [ ] Proxy-user feedback (Checkpoint D2) — what they got confused by, what
-      changed in response:
-- [ ] Held-out set results (Checkpoint E) — how they compared to the dev
-      set, and what that gap (or lack of one) suggests:
+- [x] Proxy-user feedback (Checkpoint D2) — **NOT RUN.** Day 5 prioritized
+      documentation/close-out; the proxy-user (cold, no-explanation) run was
+      never executed. Recorded here as a gap, not reconstructed. If time
+      allows before close, run it and feed results into the case study.
+- [x] Held-out set results (Checkpoint E) — **HELD.** The held-out set (4
+      cases, `data/held_out_resumes/`, runner `scripts/run_held_out.py`) was
+      generated Day 4 but deliberately **not run** — it remains un-run so it
+      stays a genuine future blind test. Day 5's "after" benchmark is instead
+      `data/results/day4_narrowed_rule.json` (the narrowed-FORMAT-RULES suite,
+      n=1, 8/13 = 61.5% vs day3 7/13 = 53.8%). When Checkpoint E is eventually
+      run, results go to `data/results/day4_held_out.json` and must be
+      reported as-is, including any drop vs the dev set.
+- [x] Day 5 close-out — **AI Collaboration Note draft and CASE STUDY outline
+      written** (`AI_COLLABORATION_NOTE.md`, `CASE_STUDY.md`) as input material
+      for the developer; final prose, the 5-minute demo, and Checkpoints
+      E/F + D2 remain developer-owned.

@@ -10,10 +10,13 @@ from typing import Any, Dict, Optional
 from pydantic import BaseModel, ValidationError
 
 from src.config import (
+    fallback_to_ollama_if_tpd,
+    get_active_model,
     get_call_interval,
     get_client,
     get_max_retries,
     get_model,
+    get_provider,
     get_temperature,
     log_metrics,
     rate_limit_sleep,
@@ -209,7 +212,7 @@ def normalize_resume(
             log_metrics(
                 "normalize",
                 candidate_id,
-                model,
+                get_active_model(),
                 latency,
                 tokens_in,
                 tokens_out,
@@ -247,6 +250,9 @@ def normalize_resume(
                     f"Normalization failed for candidate {candidate_id} after "
                     f"{get_max_retries() + 1} attempts: {e}"
                 ) from e
+            fallback_to_ollama_if_tpd(e)
+            if get_provider() != "groq":
+                client = get_client()  # refresh with the newly active provider
             rate_limit_sleep(e)
 
     raise RuntimeError(

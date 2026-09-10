@@ -15,10 +15,13 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field, ValidationError
 
 from src.config import (
+    fallback_to_ollama_if_tpd,
+    get_active_model,
     get_call_interval,
     get_client,
     get_max_retries,
     get_model,
+    get_provider,
     get_temperature,
     log_metrics,
     rate_limit_sleep,
@@ -190,9 +193,16 @@ SECURITY RULE (critical):
 
 FORMAT RULES:
 - Application-form header lines (e.g. 'APPLICATION:', 'POSITION:', 'RE:',
-  'REF:') state the role being applied for — document metadata, NOT a job
-  title the candidate has held. Ignore them when judging title/seniority
-  alignment.
+  'REF:') are document metadata for the JOB BEING APPLIED FOR. Their title
+  (e.g. the POSITION line) is the target role, NOT a title the candidate has
+  held — do not treat the header value as a held job title or as a resume
+  date-range. When parsing dates, ignore header lines entirely; when
+  judging title/seniority alignment, compare the candidate's ACTUAL work
+  history titles first. You MAY note a discrepancy between the target role
+  in the header and the candidate's actual highest/most-recent title
+  (e.g. applying for Manager while holding Coordinator) as evidence of
+  level misalignment — this is a legitimate red-flag signal, not metadata
+  to suppress.
 - A candidate profile date_range with 'unknown' start/end means the resume
   ROLE was visible but its dates were unreadable (e.g. garbled text). Count
   any explicit duration hint visible in the raw text (e.g. '6 years at
@@ -269,7 +279,7 @@ def score_candidate(
             log_metrics(
                 "score",
                 candidate_id,
-                model,
+                get_active_model(),
                 latency,
                 tokens_in,
                 tokens_out,
@@ -307,6 +317,9 @@ def score_candidate(
                     f"Scoring failed for candidate {candidate_id} after "
                     f"{get_max_retries() + 1} attempts: {e}"
                 ) from e
+            fallback_to_ollama_if_tpd(e)
+            if get_provider() != "groq":
+                client = get_client()  # refresh with the newly active provider
             rate_limit_sleep(e)
 
     raise RuntimeError(
@@ -323,20 +336,22 @@ def ensemble_score(
     client=None,
     model: Optional[str] = None,
 ) -> ScoringResult:
-    """Score several times and return the representative result to reduce
+    """Score several times and return a representative result to reduce
     boundary drift from LLM stochasticity (root-cause fix for case 13).
 
-    Normally score_candidate is called (n_runs) times; the result whose
-    criteria-total equals the median total is returned. Its criteria scores
-    and evidence strings are taken verbatim from that run, so evidence stays
-    grounded and self-consistent.
+    Majority vote on overall_fit: if a Strict/Possible/Not-a-Fit label wins
+    a strict majority (> n/2), the representative is drawn from the runs
+    that produced it (median criteria-total among them breaks near-ties).
+    If no strict majority (n even), the median-total rule is used instead.
+    The representative's criteria scores and evidence strings are taken
+    verbatim from a real run, so evidence stays grounded and self-consistent.
 
     Args:
         candidate_profile: Normalized candidate profile.
         jd_text: Job description plain text.
         resume_text: Raw resume text.
         n_runs: Number of scoring runs to ensemble (>=1). 1 = plain scoring.
-        client: Optional Groq client.
+        client: Optional LLM client.
         model: Optional model override.
 
     Returns:
@@ -354,11 +369,29 @@ def ensemble_score(
         return sum(c.score for c in r.criteria_scores)
 
     totals = sorted(_total(r) for r in results)
-    median_total = statistics.median(totals)  # float, unbiased for any n
 
-    representative = min(results, key=lambda r: abs(_total(r) - median_total))
+    fit_counts: Dict[str, int] = {}
+    for r in results:
+        fit_counts[r.overall_fit] = fit_counts.get(r.overall_fit, 0) + 1
+    majority_fit = max(fit_counts, key=lambda f: (fit_counts[f], _fit_sort(f)))
+
+    def _median_total(pool: List[ScoringResult]) -> float:
+        return statistics.median(sorted(_total(r) for r in pool))
+
+    if fit_counts[majority_fit] > len(results) / 2:
+        pool = [r for r in results if r.overall_fit == majority_fit]
+    else:
+        pool = results
+    representative = min(pool, key=lambda r: abs(_total(r) - _median_total(pool)))
+
     logger.info(
-        "Ensemble n=%d stats for %s: totals=%s -> representative total=%d",
-        n_runs, candidate_profile.candidate_id, totals, _total(representative),
+        "Ensemble n=%d stats for %s: totals=%s fits=%s -> representative %s total=%d",
+        n_runs, candidate_profile.candidate_id, totals, fit_counts,
+        representative.overall_fit, _total(representative),
     )
     return representative
+
+
+def _fit_sort(fit: str) -> int:
+    """Stable tie-break among equal vote counts, in gold-label band order."""
+    return FIT_LEVELS.index(fit) if fit in FIT_LEVELS else len(FIT_LEVELS)
