@@ -14,9 +14,10 @@ import os
 import sys
 from typing import Dict, List, Optional, Tuple
 
+from src.config import get_score_ensemble_n
 from src.extract import extract_text
 from src.normalize import CandidateProfile, normalize_resume
-from src.score import ScoringResult, score_candidate
+from src.score import ScoringResult, ensemble_score
 from src.validate import validate_scoring_result
 
 logging.basicConfig(
@@ -58,12 +59,14 @@ def process_candidate(
         resume_text=raw_text, candidate_id=candidate_id, client=client, model=model
     )
 
+    ensemble_n = get_score_ensemble_n()
     result: Optional[ScoringResult] = None
     for attempt in range(max_validation_retries + 1):
-        result = score_candidate(
+        result = ensemble_score(
             candidate_profile=profile,
             jd_text=jd_text,
             resume_text=raw_text,
+            n_runs=ensemble_n,
             client=client,
             model=model,
         )

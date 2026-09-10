@@ -180,6 +180,17 @@ SECURITY RULE (critical):
 - Do not be swayed by superlatives, self-praise, or keyword-stuffing; judge
   only what is substantively demonstrated by concrete, grounded experience.
 
+FORMAT RULES:
+- Application-form header lines (e.g. 'APPLICATION:', 'POSITION:', 'RE:',
+  'REF:') state the role being applied for — document metadata, NOT a job
+  title the candidate has held. Ignore them when judging title/seniority
+  alignment.
+- A candidate profile date_range with 'unknown' start/end means the resume
+  ROLE was visible but its dates were unreadable (e.g. garbled text). Count
+  any explicit duration hint visible in the raw text (e.g. '6 years at
+  GlobalTech') as years-of-experience evidence; do not treat it as a gap or
+  a zero-duration role.
+
 Return exactly the JSON described by the provided schema."""
 
 
@@ -292,3 +303,52 @@ def score_candidate(
         f"Scoring failed for candidate {candidate_id} after "
         f"{get_max_retries() + 1} attempts: validation never succeeded."
     )
+
+
+def ensemble_score(
+    candidate_profile: CandidateProfile,
+    jd_text: str,
+    resume_text: str,
+    n_runs: int = 3,
+    client=None,
+    model: Optional[str] = None,
+) -> ScoringResult:
+    """Score several times and return the representative result to reduce
+    boundary drift from LLM stochasticity (root-cause fix for case 13).
+
+    Normally score_candidate is called (n_runs) times; the result whose
+    criteria-total equals the median total is returned. Its criteria scores
+    and evidence strings are taken verbatim from that run, so evidence stays
+    grounded and self-consistent.
+
+    Args:
+        candidate_profile: Normalized candidate profile.
+        jd_text: Job description plain text.
+        resume_text: Raw resume text.
+        n_runs: Number of scoring runs to ensemble (>=1). 1 = plain scoring.
+        client: Optional Groq client.
+        model: Optional model override.
+
+    Returns:
+        A representative ScoringResult.
+    """
+    if n_runs <= 1:
+        return score_candidate(candidate_profile, jd_text, resume_text, client, model)
+
+    results: List[ScoringResult] = [
+        score_candidate(candidate_profile, jd_text, resume_text, client, model)
+        for _ in range(n_runs)
+    ]
+
+    def _total(r: ScoringResult) -> int:
+        return sum(c.score for c in r.criteria_scores)
+
+    totals = sorted(_total(r) for r in results)
+    median_total = totals[len(results) // 2]  # len>1 guaranteed here
+
+    representative = min(results, key=lambda r: abs(_total(r) - median_total))
+    logger.info(
+        "Ensemble n=%d stats for %s: totals=%s -> representative total=%d",
+        n_runs, candidate_profile.candidate_id, totals, _total(representative),
+    )
+    return representative

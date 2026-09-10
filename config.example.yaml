@@ -1,8 +1,11 @@
 llm:
   model: openai/gpt-oss-120b
-  temperature: 0.1
+  temperature: 0.0
   max_retries: 1
   timeout: 60
+
+pipeline:
+  score_ensemble_n: 3
 
 logging:
   metrics_file: data/results/call_metrics.log

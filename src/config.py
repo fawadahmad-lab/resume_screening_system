@@ -37,6 +37,12 @@ def _load_yaml() -> Dict[str, Any]:
 _CONFIG: Dict[str, Any] = _load_yaml()
 _LLM_CONFIG: Dict[str, Any] = _CONFIG.get("llm", {})
 _LOGGING_CONFIG: Dict[str, Any] = _CONFIG.get("logging", {})
+_PIPELINE_CONFIG: Dict[str, Any] = _CONFIG.get("pipeline", {})
+
+
+def get_score_ensemble_n() -> int:
+    """Number of scoring runs ensembled per candidate (median total wins)."""
+    return int(_PIPELINE_CONFIG.get("score_ensemble_n", 3))
 
 
 def get_llm_config() -> Dict[str, Any]:
