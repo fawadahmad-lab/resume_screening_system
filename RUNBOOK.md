@@ -87,63 +87,13 @@ fallback). With `provider: ollama`, everything runs on Ollama from the start.
 
 ## Running
 
-### Primary UI — FastAPI backend + React frontend
-
-The React SPA (`frontend/`) talks only to the FastAPI adapter (`src/api.py`),
-which in turn calls the exact same `src/pipeline.py` functions. No screening,
-scoring, or evaluation logic lives in the API or the frontend.
-
-**Prerequisite:** build the frontend once (Node 20+):
-
-```bash
-cd frontend
-npm install
-npm run build      # tsc -b && vite build → frontend/dist/
-```
-
-**Run the backend** (serves the built SPA at `/` and the API at `/api/*`):
-
-```bash
-source venv/bin/activate
-uvicorn src.api:app --host 127.0.0.1 --port 8000
-```
-
-Open <http://127.0.0.1:8000>. Because the SPA is served from the same origin,
-there is no CORS config to maintain.
-
-**Frontend development** (hot reload; Vite proxies `/api` → port 8000 — start
-the backend first):
-
-```bash
-cd frontend
-npm run dev        # http://127.0.0.1:5173
-npm test           # vitest unit tests (mocked network, no backend needed)
-```
-
-**API endpoints** (thin adapters over existing pipeline functions):
-
-| Method | Path | Purpose |
-|---|---|---|
-| `POST` | `/api/screenings` | Create a screening run (multipart: `jd_text`/`jd_file` + `resumes[]`/`sample_resumes[]`). Runs in a background thread; returns `{screening_id}` immediately. |
-| `GET` | `/api/screenings` | List persisted runs (newest first, summaries only) |
-| `GET` | `/api/screenings/{id}` | Full run: status, per-candidate progress, results, failures |
-| `GET` | `/api/jobs`, `/api/jobs/{id}` | Sample-JD catalog + one JD's text (read-only) |
-| `GET` | `/api/sample-resumes` | Filenames of the bundled sample resumes |
-| `GET` | `/api/evals` | Merged `day3_baseline.json` + `day4_narrowed_rule.json` (read-only) |
-| `GET` | `/api/system` | Live provider/model/config state (read-only) |
-
-Runs persist to `data/screenings/<id>/screening.json` (file-backed JSON,
-gitignored, no database); uploaded resumes are copied under
-`data/screenings/<id>/resumes/`. Because jobs write to disk after every
-candidate, a restart can still read completed runs via `GET /api/screenings`.
-
-### Streamlit app (secondary/legacy)
+### Web app (recruiter-facing)
 
 ```bash
 streamlit run app.py
 ```
 
-Calls the pipeline in-process (no HTTP), kept for the CLI/eval workflow.
+Calls the pipeline in-process (no HTTP).
 
 ### CLI batch pipeline
 
@@ -180,11 +130,7 @@ python scripts/run_held_out.py --output data/results/day4_held_out.json
   retries once on validation failure, then flags for human review.
 - `src/config.py` — config loading, shared client (Groq/Ollama adapters),
   TPD detection, TPM rate-limit sleep, metrics logging.
-- `src/api.py` — FastAPI adapter for the React frontend (background worker,
-  file-backed persistence under `data/screenings/`, static SPA mount).
-- `frontend/` — React + TypeScript + Vite SPA (design system in
-  `frontend/src/styles/`; typed API layer in `frontend/src/api/`).
-- `app.py` — Streamlit UI (secondary/legacy).
+- `app.py` — Streamlit UI.
 - `scripts/generate_synthetic_data.py` — dev-set resume/JD generator.
 - `scripts/generate_held_out_data.py` — Day-4 held-out set generator.
 - `scripts/run_held_out.py` — held-out evaluation runner.
@@ -238,8 +184,5 @@ python scripts/run_held_out.py --output data/results/day4_held_out.json
   run (see EVALUATION.md).
 - `data/results/call_metrics.log` — per-call latency and token usage for
   cost/latency analysis.
-- `data/screenings/` — runtime persistence for API screening runs
-  (`screening.json` + copied `resumes/`). Gitignored; no database. Safe to
-  delete to reset the dashboard.
 - `data/results/` — checkpoints and snapshots are **build deliverables, not
   scratch output. Commit them.**

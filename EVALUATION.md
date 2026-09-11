@@ -44,8 +44,8 @@ with zero runtime errors in either run.
 
 Snapshots (committed, never overwritten):
 
-- `data/results/day3_baseline.json` — the "before" snapshot.
-- `data/results/day4_narrowed_rule.json` — the "after" snapshot. **Note:**
+- `EvaluationPackage/results/day3_baseline.json` — the "before" snapshot.
+- `EvaluationPackage/results/day4_narrowed_rule.json` — the "after" snapshot. **Note:**
   this was the last full-suite run before Checkpoint E was held; two later
   hardening changes (n=3 majority ensemble; Ollama failover) were validated
   on individual cases, not the full suite (see hardening targets).
@@ -127,7 +127,7 @@ strongest behavior.
   rule exists precisely to surface those to a human.
 - **Auto-failover reproducibility** — under `provider: auto` the active
   backend (Groq vs hosted Ollama) can change mid-batch; per-call model is
-  recorded in `data/results/call_metrics.log` so results can be attributed.
+  recorded in `EvaluationPackage/results/call_metrics.log` so results can be attributed.
 
 ## Held-out set (blind test)
 
@@ -138,15 +138,15 @@ strongest behavior.
 - **Status as of Day 5:** Checkpoint E (held-out run) was **held** by the
   developer — the weeks-remaining sprint prioritized documentation, and the
   held-out set was preserved un-run so it remains a true future blind test.
-  When run, results go to `data/results/day4_held_out.json` and should be
+  When run, results go to `EvaluationPackage/results/day4_held_out.json` and should be
   reported as-is, including if they're worse than the dev set's (this gap,
   if any, is itself a valid finding).
 
 ## How to reproduce these numbers
 
 ```bash
-python tests/test_pipeline.py --output data/results/latest_test.json
-python scripts/diff_day34.py data/results/day3_baseline.json data/results/day4_narrowed_rule.json
+python EvaluationPackage/tests/test_pipeline.py --output data/results/latest_test.json
+python scripts/diff_day34.py EvaluationPackage/results/day3_baseline.json EvaluationPackage/results/day4_narrowed_rule.json
 ```
 
 The baseline was generated with `score_ensemble_n` at its then-default and

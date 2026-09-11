@@ -17,7 +17,7 @@ from src.extract import extract_text
 from src.pipeline import process_candidate
 
 st.set_page_config(
-    page_title="Resume Screening",
+    page_title="Resume Screening System",
     page_icon="📋",
     layout="wide",
 )
@@ -29,7 +29,7 @@ FIT_COLORS = {
 }
 CONF_ICONS = {"High": "🟢", "Medium": "🟡", "Low": "🔴"}
 
-st.title("Resume Screening")
+st.title("Resume Screening System")
 st.caption(
     "Paste a job description, upload resumes (PDF/DOCX/TXT), and get a ranked, "
     "evidence-backed fit assessment for every candidate."
