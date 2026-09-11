@@ -179,7 +179,17 @@ including if they're worse than the dev set's.
   history and the automatic Groq→Ollama failover), structured output via
   `response_format` JSON schema (strict mode) — never regex-parse free text
 - Schema validation: Pydantic v2 models mirroring Section 8 exactly
-- Interface: Streamlit
+- Interface: **Streamlit (`app.py`) kept as-is for the CLI/eval workflow;
+  React frontend (`frontend/`) is the primary UI**, served by the FastAPI
+  HTTP adapter (`src/api.py`) which calls the exact same `src/pipeline.py`
+  functions. No screening/scoring/evaluation logic lives in the API or the
+  frontend.
+- HTTP adapter: FastAPI, endpoints documented in `src/api.py` docstring.
+  Long-running screening runs execute in a background thread; the React UI
+  polls `GET /api/screenings/{id}` — never blocking HTTP requests.
+- Screening runs persist to `data/screenings/` (gitignored, file-backed JSON,
+  no database). This dir is runtime output only; `data/results/` remains the
+  build-deliverable snapshot location.
 - Config and secrets (API keys, model names) live in a `.env` / config file,
   never hardcoded, never committed
 - No silent failures — every caught exception logs a clear, actionable
@@ -204,6 +214,16 @@ including if they're worse than the dev set's.
   score.py             # LLM call: profile + JD -> rubric JSON
   validate.py          # schema + evidence checks
   pipeline.py          # orchestrates the above
+  api.py               # FastAPI HTTP adapter for the React frontend (thin; calls pipeline fns)
+/frontend
+  # React + TypeScript + Vite SPA; consumes src/api.py only
+  src/
+    api/               # typed API layer per endpoint group
+    components/        # ui + layout + feature components
+    pages/             # route-level pages
+    hooks/             # TanStack Query hooks per API group
+    styles/            # design tokens + global styles
+    types/             # TS interfaces mirroring the backend/pipeline schemas
 /tests
   test_cases.json      # the 13 dev cases + gold labels
   test_pipeline.py     # runs test_cases through pipeline, reports pass/fail
@@ -211,6 +231,7 @@ including if they're worse than the dev set's.
   sample_resumes/       # dev/calibration set (13 cases)
   sample_jds/
   held_out_resumes/     # generated Day 4 only — see Section 6 & 11
+  screenings/           # runtime persistence for API screening runs (gitignored, no DB)
   results/               # checkpoint snapshots — see Section 14, never overwrite; commit to git, see Section 12
 config.example.yaml
 README.md              # for the end user (recruiter)
@@ -415,3 +436,20 @@ assumption that a later end-to-end test will catch everything.
       written** (`AI_COLLABORATION_NOTE.md`, `CASE_STUDY.md`) as input material
       for the developer; final prose, the 5-minute demo, and Checkpoints
       E/F + D2 remain developer-owned.
+- [x] Streamlit → React frontend migration (added 2026-09-11, post-Day-5):
+      **The Streamlit UI (`app.py`) is kept as-is for CLI/eval workflows; a
+      FastAPI HTTP adapter (`src/api.py`) + React/TypeScript/Vite frontend
+      (`frontend/`) are the primary UI.** Decisions: (1) no screening/scoring/
+      validation logic lives in the API or frontend — they call the exact same
+      `src/pipeline.py` functions; (2) long-running screens run in a background
+      thread, the React UI polls `GET /api/screenings/{id}`; (3) screening runs
+      persist to `data/screenings/` (file-backed JSON, gitignored, no DB);
+      (4) no new product behavior — dashboard/eval metrics are traceable only
+      to existing repo data (`data/results/*.json`, `data/sample_*`) or real
+      backend operations; (5) the "sample resumes" loader and sample JD
+      catalog are explicitly labeled sample/demo data; (6) evidences/dev-set
+      snapshots are shown read-only and labeled as committed build snapshots,
+      never presented as live production data. New deps: fastapi,
+      uvicorn[standard], python-multipart (backend); react, react-dom,
+      react-router-dom, @tanstack/react-query, lucide-react, vitest +
+      testing-library (frontend).

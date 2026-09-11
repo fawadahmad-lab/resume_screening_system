@@ -7,3 +7,7 @@ config.yaml
 dist/
 build/
 .pytest_cache/
+data/screenings/
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/

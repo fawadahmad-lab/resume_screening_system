@@ -61,16 +61,28 @@ That flag means: *look at this one yourself before deciding.* Examples:
 - The resumes must be **digital text files** (not scanned images), and in
   **English**.
 
-## How to use it (once your IT has started the app)
+## How to use it
 
-1. **Paste the job description** into the box on the left (or upload a file).
-2. **Upload the resumes** — select as many files as you like.
-3. Click **Run screening.**
-4. Read the **Ranking** table, open any candidate to see their evidence-backed
-   breakdown, and **pay special attention to anything flagged for human
-   review.**
+The primary interface is a **web app** (React frontend served by the FastAPI
+backend). A Streamlit UI (`app.py`) is also kept as a secondary/legacy option —
+see the RUNBOOK.
+
+1. Open **New Screening**.
+2. Pick the **job description** — paste it, choose one of the bundled
+   **sample JDs**, or upload a file. (Sample data is always labeled as such.)
+3. Add the **resumes** — drag and drop your files, or tick the bundled
+   **sample resumes**.
+4. Click **Run screening** and watch progress per candidate.
+5. Read the **Ranked results** table, click any candidate to see their
+   evidence-backed breakdown, and **pay special attention to anything flagged
+   for human review.**
 
 That's it. No settings, no command line, no technical knowledge required.
+
+> **Real vs. sample data:** anything loaded from the repo's bundled fixtures is
+> labeled **Sample / Demo Data**, and the **Evaluations** page is a read-only
+> view of committed dev-set snapshots (not live production data). Screening
+> results always come from a real run you started.
 
 ## What it does NOT do
 

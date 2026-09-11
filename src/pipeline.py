@@ -12,7 +12,7 @@ import json
 import logging
 import os
 import sys
-from typing import Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 
 from src.config import get_score_ensemble_n
 from src.extract import extract_text
@@ -107,17 +107,21 @@ def run_pipeline(
     resume_files: List[str],
     client=None,
     model: Optional[str] = None,
+    on_progress: Optional[Callable[[int, int], None]] = None,
 ) -> Tuple[List[Dict], List[Dict], List[Dict]]:
     """Process a batch of resumes.
 
     Returns (ordered_results, flagged_review, failures).
     ordered_results is sorted by total score descending.
+
+    on_progress(done, total) is invoked after each candidate completes
+    (success or failure) with the count finished so far and the batch size.
     """
     ordered: List[Dict] = []
     flagged: List[Dict] = []
     failures: List[Dict] = []
 
-    for file_path in resume_files:
+    for i, file_path in enumerate(resume_files, start=1):
         try:
             outcome = process_candidate(
                 file_path=file_path, jd_text=jd_text, client=client, model=model
@@ -139,6 +143,11 @@ def run_pipeline(
             failures.append(
                 {"file": os.path.basename(file_path), "error": str(e)}
             )
+        if on_progress:
+            try:
+                on_progress(i, len(resume_files))
+            except Exception:
+                logger.warning("on_progress callback failed", exc_info=True)
 
     def _sort_key(outcome: Dict) -> int:
         return sum(c["score"] for c in outcome["result"]["criteria_scores"])

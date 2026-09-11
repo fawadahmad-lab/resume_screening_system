@@ -244,3 +244,14 @@
 2026-09-10 23:07:04 stage=score candidate=tmp_7zy6v1e model=openai/gpt-oss-120b latency=26.52s tokens_in=2966 tokens_out=1315
 2026-09-10 23:07:32 stage=normalize candidate=tmpmna2rsgm model=openai/gpt-oss-120b latency=27.74s tokens_in=2132 tokens_out=1594
 2026-09-10 23:08:01 stage=score candidate=tmpmna2rsgm model=openai/gpt-oss-120b latency=29.09s tokens_in=3529 tokens_out=1242
+2026-09-11 10:54:08 stage=normalize candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=2.12s tokens_in=1088 tokens_out=673
+2026-09-11 10:54:12 stage=score candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=4.42s tokens_in=2085 tokens_out=1838
+2026-09-11 10:54:32 stage=score candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=20.41s tokens_in=2085 tokens_out=1615
+2026-09-11 10:54:50 stage=score candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=17.56s tokens_in=2085 tokens_out=1408
+2026-09-11 10:55:25 stage=score candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=35.40s tokens_in=2085 tokens_out=1718
+2026-09-11 10:55:55 stage=score candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=29.72s tokens_in=2085 tokens_out=1880
+2026-09-11 10:56:15 stage=score candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=20.07s tokens_in=2085 tokens_out=1509
+2026-09-11 11:18:23 stage=normalize candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=12.89s tokens_in=1088 tokens_out=656
+2026-09-11 11:18:27 stage=score candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=3.96s tokens_in=2085 tokens_out=1545
+2026-09-11 11:18:31 stage=score candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=4.53s tokens_in=2085 tokens_out=1612
+2026-09-11 11:19:02 stage=score candidate=resume_06_edge_employment_gap model=openai/gpt-oss-120b latency=31.10s tokens_in=2085 tokens_out=1531
