@@ -8,8 +8,9 @@ dist/
 build/
 .pytest_cache/
 data/screenings/
+.agents/
 skills-lock.json
-.agents/skills
+skills.json
 AGENTS.md
 
 
