@@ -56,14 +56,23 @@ def score_ranges_valid(result: ScoringResult) -> Tuple[bool, str]:
 
 
 def evidence_valid(result: ScoringResult) -> Tuple[bool, str]:
-    """Check every evidence string is non-empty and non-generic."""
+    """Check every evidence string is non-empty and non-generic.
+
+    A generic phrase is only a violation when the evidence is otherwise
+    low-information: has no digit characters (no dates/years/numbers). This
+    avoids rejecting specific, grounded evidence that merely echoes a rubric
+    criterion name — e.g. 'Years of relevant experience' naturally produces
+    evidence beginning with 'Relevant experience ...' that then cites concrete
+    roles/dates/domains. See AGENTS.md Section 16 (2026-09-13 hardening).
+    """
     for cs in result.criteria_scores:
         evidence = (cs.evidence or "").strip()
         if not evidence:
             return False, f"Empty evidence for criterion '{cs.criterion}'"
         low = evidence.lower()
+        has_digit = any(ch.isdigit() for ch in evidence)
         for phrase in GENERIC_EVIDENCE_PHRASES:
-            if phrase in low:
+            if phrase in low and not has_digit:
                 return False, (
                     f"Generic evidence for '{cs.criterion}': '{cs.evidence}'"
                 )

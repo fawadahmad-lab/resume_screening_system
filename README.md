@@ -85,7 +85,7 @@ That's it. No settings, no command line, no technical knowledge required.
 
 ## For developers and operators
 
-Setup, configuration, the Groq→Ollama auto-failover, and troubleshooting live
+Setup, configuration (provider/model options), and troubleshooting live
 in **[`RUNBOOK.md`](RUNBOOK.md)**, and the system design in
 **[`ARCHITECTURE.md`](ARCHITECTURE.md)**. How it was tested, and what it gets
 wrong, is in **[`EVALUATION.md`](EVALUATION.md)**.

@@ -61,8 +61,10 @@ Pydantic v2 models mirror the Section 8 schemas exactly.
 - `score` is an integer **0–2** per criterion.
 - `evidence` must be **non-empty and grounded** in the actual resume text.
   A missing or generic evidence string (e.g. "resume shows relevant
-  experience") is a validation failure, not a pass
-  (`GENERIC_EVIDENCE_PHRASES` in `src/validate.py:17`).
+  experience") is a validation failure, not a pass. A generic phrase is only
+  rejected when the evidence otherwise carries no digits (dates/numbers), so
+  grounded evidence that echoes a criterion name passes
+  (`evidence_valid()` in `src/validate.py`).
 - Evidence strings are **paraphrase-only**: the rubric forbids literal
   double-quote, single-quote, or backslash characters in an evidence string
   (hardening added 2026-09-10 after a model began copying quote-spans
@@ -115,36 +117,20 @@ the candidate is surfaced with `flag_for_human_review` set and the reason in
 
 ## Model & provider choices
 
-### Why Groq `openai/gpt-oss-120b`
+### Why OpenAI `gpt-5.6-luna`
 
 - Structured-output JSON in strict mode (`response_format` json_schema) —
   never regex-parsed free text.
-- Cost: free-tier for the 5-day sprint.
-- History (see AGENTS.md §16): the run briefly used `openai/gpt-oss-20b`
-  on 2026-09-10 midway through Day 4 when the 120b model hit its 200k
-  tokens/day window; the 20b detour was purely quota-driven and Checkpoint E
-  runs used 120b. The 20b model also exhibited verbatim quote-copying that
-  corrupted strict-JSON output (fixed via the paraphrase evidence rule).
+- A lightweight reasoning model that rejects the `temperature` parameter
+  server-side, so calls omit it entirely; the nullable `flag_reason` field
+  uses a `["string", "null"]` type union (OpenAI rejects `oneOf`).
+- History (see AGENTS.md §16): the system previously ran on Groq
+  `openai/gpt-oss-120b` with a Groq→hosted-Ollama auto-failover. All
+  Groq/Ollama provider code was removed 2026-09-13; the system is now
+  OpenAI-only.
 
-### Groq → Ollama auto-failover (`src/config.py:203-263`)
-
-Free-tier Groq has a **200k tokens/day (TPD)** window and a tight **8k
-tokens/min (TPM)** window. The system handles both differently:
-
-- **TPM (transient):** `rate_limit_sleep()` parses Groq's "Please try again
-  in Xs/Xm" and sleeps out the window between retries. Not a failover
-  trigger.
-- **TPD (daily exhaustion):** under `provider: auto`, a call whose error
-  mentions "daily"/"per day"/"TPD"/"for the day" triggers a **permanent
-  in-process failover** to the hosted Ollama endpoint (`https://ollama.com`,
-  `OLLAMA_API_KEY`, `ollama_model: gpt-oss:120b`). A compat adapter
-  (`_OllamaCompatClient` in `src/config.py:165`) surfaces the Ollama SDK
-  under Groq's `chat.completions.create` call shape and translates the
-  `response_format` JSON-schema envelope into Ollama's `format=<schema>`.
-  normalize/score stay provider-agnostic; clients are cached and shared.
-
-All LLM calls share one cached client and log latency + token usage to
-`data/results/call_metrics.log` (`log_metrics()` at `src/config.py:266`).
+All LLM calls share one cached OpenAI client and log latency + token usage to
+`data/results/call_metrics.log` (`log_metrics()` in `src/config.py`).
 
 ### Deterministic extraction
 
@@ -175,14 +161,12 @@ Full results: **EVALUATION.md**.
 
 `src/config.py` loads secrets from `.env` and model settings from
 `config.yaml` (falling back to `config.example.yaml`). It exposes
-`get_provider()` (groq/auto/ollama), `get_model()`, `get_ollama_model()`,
-`get_active_model()`, ensemble count, retries, timeouts, pacing, and metrics
-path as getters, keeping normalize/score/pipeline modules provider-agnostic.
+`get_model()`, `get_active_model()`, the cached OpenAI client
+(`get_client()`), ensemble count, retries, pacing, and the metrics path as
+getters, keeping normalize/score/pipeline modules provider-agnostic.
 
 ## Reproducibility caveat
 
 Scoring is LLM-based; run-to-run variance exists (measured: identical
 configs scored a single candidate 2, 5, 6, 7 — the motivation for the n=3
-majority ensemble). Under `provider: auto`, the active backend can change
-mid-batch (recorded per-call in `call_metrics.log`). Both are documented
-knowns, not silent failures.
+majority ensemble). This is a documented known, not a silent failure.

@@ -173,11 +173,11 @@ including if they're worse than the dev set's.
 ## 12. Coding Conventions
 
 - Language: Python
-- LLM provider: Groq API, model `openai/gpt-oss-120b` (briefly switched
-  to `openai/gpt-oss-20b` on 2026-09-10 when the 120b model hit its 200k
-  tokens/day window mid-Day-4, then back to 120b — see §16 for the quota
-  history and the automatic Groq→Ollama failover), structured output via
-  `response_format` JSON schema (strict mode) — never regex-parse free text
+- LLM provider: **OpenAI API, model `gpt-5.6-luna`** (set via `llm.model` in
+  config.yaml; OPENAI_API_KEY in .env). Groq and Ollama providers were
+  removed 2026-09-13 — see §16 for the quota history and the removal note.
+  Structured output via `response_format` JSON schema (strict mode) — never
+  regex-parse free text
 - Schema validation: Pydantic v2 models mirroring Section 8 exactly
 - Interface: **Streamlit (`app.py`)** is the recruiter-facing UI. CLI
   (`src/pipeline.py`) is the primary batch entry point used by the eval
@@ -313,6 +313,61 @@ assumption that a later end-to-end test will catch everything.
       failed first E3/E4 attempts, so the E3/E4 background job waits with
       TPD-aware backoff until a full run fits — Checkpoint E will only record
       genuinely quota-free snapshots.**
+- [x] 2026-09-13 switch to OpenAI: **`llm.provider` now also accepts `openai`.
+      Provider is set to `openai` and model to `gpt-5.6-terra` (`llm.openai_model`),
+      reading `OPENAI_API_KEY` from .env; the `openai` Python package was added
+      to requirements.txt. Rationale: the user replaced the Groq key with an
+      OpenAI key and requested an OpenAI model; `gpt-5.6-terra` is a lightweight
+      reasoning model that supports the existing Chat Completions JSON-schema
+      call shape unchanged. The OpenAI client (`openai.OpenAI(api_key=...)`)
+      exposes the same `chat.completions.create` + `response_format
+      json_schema strict` surface as the Groq SDK, so normalize.py/score.py
+      needed no call-shape changes — only two data-format adaptations:
+      (a) **temperature**: `gpt-5.6-terra` rejects the `temperature` parameter
+      server-side ('does not support 0.0 ... only the default (1) is
+      supported'), so `get_temperature()` now returns None for the openai
+      provider and the SDK omits the param; (b) **nullable schema field**:
+      OpenAI structured outputs reject `oneOf`, so SCORING_SCHEMA's
+      `flag_reason` was changed from `oneOf` to the type-union
+      `["string", "null"]` (accepted by both OpenAI and Groq).
+      `get_model()` is now provider-appropriate (returns `openai_model` for
+      the openai provider, `ollama_model` for ollama, else the Groq model).
+      Groq (`groq`/`auto`) and Ollama (`ollama`) providers remain supported;
+      the Groq TPD→Ollama auto-failover is untouched and only active under
+      `provider: auto`. Verified 2026-09-13: resume_01_strong_fit scores
+      Strong Fit 10/10 High through the OpenAI provider (`gpt-5.6-luna`,
+      ~3s normalize, ~7s x3 ensemble score).**
+- [x] 2026-09-13 Groq/Ollama removal: **All Groq and Ollama provider code and
+      config were deleted — the system is now OpenAI-only. Removed from
+      `src/config.py`: Groq client, hosted-Ollama compat adapter, the
+      `provider: groq | auto | ollama` selection, TPD-exhaustion detection,
+      `rate_limit_sleep()`, `fallback_to_ollama_if_tpd()`, `get_provider()`,
+      `get_temperature()` (gpt-5.6-luna rejects the param; calls omit it), and
+      the already-unused `get_llm_config()`/`get_timeout()`/`verbose`. Config
+      keys `provider`, `openai_model`, `temperature`, `ollama_host`,
+      `ollama_model` were dropped in favor of a single `llm.model`
+      (`gpt-5.6-luna`). `groq` and `ollama` packages removed from
+      requirements.txt; GROQ_API_KEY/OLLAMA_API_KEY removed from .env.example.
+      Structured-output schema comments and module docstrings updated.
+      Historical notes on the Groq/Ollama era remain below for the case
+      study. Verified 2026-09-13: unit suite + live resume_01 run unchanged
+      (Strong Fit 10/10 High).**
+- [x] 2026-09-13 evidence-check hardening (validator false positive): **A
+      real run produced evidence beginning 'Relevant experience spans from
+      the Data Science Fellow role beginning May 2024 ...' (roles, dates,
+      domains all cited) that was rejected as generic because
+      `GENERIC_EVIDENCE_PHRASES` contains the bare substring 'relevant
+      experience' — which collides with the rubric criterion's own name
+      'Years of relevant experience'. Fix in `src/validate.py`:
+      `evidence_valid()` now only treats a generic phrase as a violation when
+      the evidence is otherwise low-information (has NO digit characters).
+      Digit-bearing grounded evidence passes regardless of phrasing; digit-
+      free boilerplate ('resume shows relevant experience') is still
+      rejected. Complementary prompt hardening in `src/score.py` RUBRIC_PROMPT
+      EVIDENCE RULES: never open an evidence string with 'Relevant
+      experience'/'Relevant background' lead-ins — lead with a concrete fact.
+      Unit coverage added at `EvaluationPackage/tests/test_validate.py`
+      (pure logic, no LLM; 5/5 pass).**
 - [x] Scoring call additional input: **Aside from candidate profile + JD, the
       raw resume text is passed into the scoring call so (a) evidence strings
       are grounded in specific resume details and (b) embedded prompt-injection

@@ -1,5 +1,5 @@
 """Normalization: LLM call converting raw resume text into a structured
-candidate profile. Uses Groq structured output (strict mode JSON schema).
+candidate profile. Uses OpenAI structured output (strict mode JSON schema).
 """
 
 import json
@@ -10,16 +10,12 @@ from typing import Any, Dict, Optional
 from pydantic import BaseModel, ValidationError
 
 from src.config import (
-    fallback_to_ollama_if_tpd,
     get_active_model,
     get_call_interval,
     get_client,
     get_max_retries,
     get_model,
-    get_provider,
-    get_temperature,
     log_metrics,
-    rate_limit_sleep,
 )
 
 logger = logging.getLogger(__name__)
@@ -44,8 +40,8 @@ class CandidateProfile(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# JSON schema for Groq strict mode. All fields required, additionalProperties
-# must be false on every object (Groq strict-mode constraint).
+# JSON schema for OpenAI structured outputs. All fields required,
+# additionalProperties must be false on every object (strict-mode constraint).
 # ---------------------------------------------------------------------------
 
 _DATE_RANGE_SCHEMA: Dict[str, Any] = {
@@ -157,13 +153,13 @@ def normalize_resume(
 ) -> CandidateProfile:
     """Convert raw resume text to a structured CandidateProfile.
 
-    Makes a Groq structured-output call in strict mode. Retries once on
+    Makes an OpenAI structured-output call in strict mode. Retries on
     validation failure per AGENTS.md Section 7 before raising.
 
     Args:
         resume_text: Plain text extracted from a resume file.
         candidate_id: Stable identifier for this candidate.
-        client: Optional prebuilt Groq client (cached in pipeline).
+        client: Optional prebuilt OpenAI client (cached in pipeline).
         model: Optional model override (defaults to config).
 
     Returns:
@@ -194,7 +190,6 @@ def normalize_resume(
             response = client.chat.completions.create(
                 model=model,
                 messages=messages,
-                temperature=get_temperature(),
                 response_format={
                     "type": "json_schema",
                     "json_schema": {
@@ -250,10 +245,6 @@ def normalize_resume(
                     f"Normalization failed for candidate {candidate_id} after "
                     f"{get_max_retries() + 1} attempts: {e}"
                 ) from e
-            fallback_to_ollama_if_tpd(e)
-            if get_provider() != "groq":
-                client = get_client()  # refresh with the newly active provider
-            rate_limit_sleep(e)
 
     raise RuntimeError(
         f"Normalization failed for candidate {candidate_id} after "

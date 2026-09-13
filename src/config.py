@@ -1,15 +1,13 @@
-"""Configuration loading and shared client setup.
+"""Configuration loading and shared OpenAI client setup.
 
 Loads secrets from .env and model settings from config.yaml (falls back to
-config.example.yaml). Provides a single Groq client factory for normalize.py
+config.example.yaml). Provides a single cached OpenAI client for normalize.py
 and score.py so all LLM calls share the same model settings.
 """
 
 import logging
 import os
-import re
 import time
-from types import SimpleNamespace
 from typing import Any, Dict
 
 import yaml
@@ -47,34 +45,9 @@ def get_score_ensemble_n() -> int:
     return int(_PIPELINE_CONFIG.get("score_ensemble_n", 3))
 
 
-def get_llm_config() -> Dict[str, Any]:
-    return _LLM_CONFIG
-
-
 def get_model() -> str:
-    return _LLM_CONFIG.get("model", "openai/gpt-oss-20b")
-
-
-def get_provider() -> str:
-    """LLM provider: 'groq' (default), 'ollama', or 'auto'.
-
-    'auto' starts on Groq and falls back to Ollama for the remainder of the
-    process once a Groq daily-token (TPD) exhaustion is detected.
-    """
-    return _LLM_CONFIG.get("provider", "groq")
-
-
-def get_ollama_host() -> str:
-    return _LLM_CONFIG.get("ollama_host", "https://ollama.com")
-
-
-def get_ollama_model() -> str:
-    """Model name for Ollama (its namespace differs from Groq's regexp)."""
-    return _LLM_CONFIG.get("ollama_model", "gpt-oss:120b")
-
-
-def get_temperature() -> float:
-    return float(_LLM_CONFIG.get("temperature", 0.1))
+    """Default model name for normalize/score LLM calls."""
+    return _LLM_CONFIG.get("model", "gpt-5.6-luna")
 
 
 def get_max_retries() -> int:
@@ -82,185 +55,35 @@ def get_max_retries() -> int:
 
 
 def get_call_interval() -> float:
-    """Seconds to wait before each first LLM attempt (free-tier TPM pacing)."""
+    """Seconds to wait before each first LLM attempt (rate-limit pacing)."""
     return float(_LLM_CONFIG.get("call_interval_s", 0.0))
-
-
-def get_timeout() -> int:
-    return int(_LLM_CONFIG.get("timeout", 60))
 
 
 def get_metrics_file() -> str:
     return _LOGGING_CONFIG.get("metrics_file", METRICS_FILE)
 
 
-def rate_limit_sleep(exception: Exception) -> None:
-    """Sleep until a Groq 429 rate-limit window closes.
-
-    Groq embeds 'Please try again in Xs' (or 'XmYs') in rate-limit errors.
-    Parse and sleep that duration + a small buffer so the next LLM attempt
-    lands in a fresh TPM window (gpt-oss-20b has a tight 8k tokens/min
-    limit). Falls back to a 20s sleep if the wait can't be parsed.
-    """
-    try:
-        match = re.search(r"Please try again in (\d+(?:\.\d+)?)(s|m|h)", str(exception))
-        if match:
-            value = float(match.group(1))
-            unit = match.group(2)
-            wait = value * {"s": 1, "m": 60, "h": 3600}[unit]
-        else:
-            wait = 20.0
-    except Exception:
-        wait = 20.0
-    time.sleep(wait + 2.0)
-
-
-_GROQ_CLIENT = None
-_OLLAMA_CLIENT = None
-_FALLBACK_TRIGGERED = False
-
-
-class _OllamaResponse:
-    """Minimal OpenAI/Groq-style response wrapper for an Ollama chat reply."""
-
-    def __init__(self, content: str, prompt_tokens: int, completion_tokens: int):
-        self.choices = [
-            SimpleNamespace(message=SimpleNamespace(content=content))
-        ]
-        self.usage = SimpleNamespace(
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-        )
-
-
-class _OllamaChatCompletions:
-    """Adapter: expose Groq-style chat.completions.create on the Ollama client.
-
-    Translates Groq's response_format json_schema envelope into Ollama's
-    `format=<schema dict>` parameter and returns an OpenAI-shaped response so
-    normalize/score modules stay provider-agnostic.
-    """
-
-    def __init__(self, ollama_client):
-        self._client = ollama_client
-
-    def create(self, model, messages, temperature, response_format=None, **kwargs):
-        schema = None
-        if response_format:
-            schema = response_format.get("json_schema", {}).get("schema")
-        resp = self._client.chat(
-            get_ollama_model(),
-            messages=messages,
-            format=schema or "json",
-            options={"temperature": temperature},
-            stream=False,
-        )
-        return _OllamaResponse(
-            content=resp.message.content,
-            prompt_tokens=getattr(resp, "prompt_eval_count", 0) or 0,
-            completion_tokens=getattr(resp, "eval_count", 0) or 0,
-        )
-
-
-class _OllamaCompatClient:
-    """Ollama client surfaced under the Groq chat.completions call shape."""
-
-    def __init__(self, ollama_client):
-        self.chat = SimpleNamespace(completions=_OllamaChatCompletions(ollama_client))
-
-
-def _get_groq_client():
-    global _GROQ_CLIENT
-    if _GROQ_CLIENT is None:
-        api_key = os.environ.get("GROQ_API_KEY")
-        if not api_key:
-            raise RuntimeError(
-                "GROQ_API_KEY not set. Copy .env.example to .env and add your key."
-            )
-        from groq import Groq
-
-        _GROQ_CLIENT = Groq(api_key=api_key)
-    return _GROQ_CLIENT
-
-
-def _get_ollama_client():
-    global _OLLAMA_CLIENT
-    if _OLLAMA_CLIENT is None:
-        api_key = os.environ.get("OLLAMA_API_KEY")
-        if not api_key:
-            raise RuntimeError(
-                "OLLAMA_API_KEY not set (needed for ollama provider/fallback)."
-            )
-        from ollama import Client as OllamaClient
-
-        _OLLAMA_CLIENT = OllamaClient(
-            host=get_ollama_host(),
-            headers={"Authorization": "Bearer " + api_key},
-        )
-    return _OLLAMA_CLIENT
-
-
-def _is_tpd_exhaustion(exception: Exception) -> bool:
-    """Detect a Groq DAILY-token (TPD) exhaustion, as opposed to a transient
-    8k/min TPM window wait that rate_limit_sleep() can ride out.
-
-    Triggers on Groq rate-limit wording mentioning 'day', 'daily', or 'TPD'.
-    Returns False for plain 'Please try again in Xs' TPM messages.
-    """
-    text = str(exception).lower()
-    if any(needle in text for needle in ("daily", "day's", "per day", "tpd", "for the day")):
-        return True
-    return False
+_OPENAI_CLIENT = None
 
 
 def get_client():
-    """Return a cached, provider-appropriate LLM client.
+    """Return a cached OpenAI client (OPENAI_API_KEY from .env)."""
+    global _OPENAI_CLIENT
+    if _OPENAI_CLIENT is None:
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError(
+                "OPENAI_API_KEY not set. Copy .env.example to .env and add your key."
+            )
+        from openai import OpenAI
 
-    Provider resolution (see get_provider()):
-      - provider == 'ollama': always the Ollama hosted client.
-      - provider in ('groq', 'auto'): Groq; on TPD exhaustion when 'auto',
-        falls back to Ollama for the remainder of the process and caches that
-        decision (_FALLBACK_TRIGGERED).
-    """
-    global _FALLBACK_TRIGGERED
-    provider = get_provider()
-
-    if provider == "ollama" or _FALLBACK_TRIGGERED:
-        return _get_ollama_client()
-    try:
-        return _get_groq_client()
-    except RuntimeError:
-        if provider == "auto":
-            return _get_ollama_client()
-        raise
+        _OPENAI_CLIENT = OpenAI(api_key=api_key)
+    return _OPENAI_CLIENT
 
 
 def get_active_model() -> str:
-    """Model name actually being used (Ollama name if the Ollama provider is
-    active, else the configured Groq model)."""
-    if get_provider() == "ollama" or _FALLBACK_TRIGGERED:
-        return get_ollama_model()
+    """Model name used for normalize/score calls."""
     return get_model()
-
-
-def fallback_to_ollama_if_tpd(exception: Exception) -> None:
-    """Permanently switch the cached provider to Ollama on Groq TPD exhaustion.
-
-    Called from normalize/score after a rate-limited attempt. Must be invoked
-    BEFORE the retry loop re-creates a client so subsequent attempts (and the
-    rest of the batch) use Ollama. Logs the transition loudly.
-    """
-    global _FALLBACK_TRIGGERED
-    if get_provider() == "ollama" or _FALLBACK_TRIGGERED:
-        return
-    if not _is_tpd_exhaustion(exception):
-        return
-    _FALLBACK_TRIGGERED = True
-    logger.warning(
-        "Groq daily token (TPD) window exhausted (%s). Failing over to "
-        "Ollama provider for the remainder of this process.",
-        str(exception)[:300],
-    )
 
 
 def log_metrics(

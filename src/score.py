@@ -1,8 +1,8 @@
 """Scoring: LLM call converting candidate profile + JD into rubric-based JSON.
 
-Uses Groq structured output in strict mode. Evidence strings must be grounded
-in the actual resume text — the raw resume text is passed alongside the
-profile so the model can cite specific details and so embedded prompt
+Uses OpenAI structured output in strict mode. Evidence strings must be
+grounded in the actual resume text — the raw resume text is passed alongside
+the profile so the model can cite specific details and so embedded prompt
 injection attempts in the resume are visible and can be ignored.
 """
 
@@ -15,16 +15,12 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field, ValidationError
 
 from src.config import (
-    fallback_to_ollama_if_tpd,
     get_active_model,
     get_call_interval,
     get_client,
     get_max_retries,
     get_model,
-    get_provider,
-    get_temperature,
     log_metrics,
-    rate_limit_sleep,
 )
 from src.normalize import CandidateProfile
 
@@ -61,7 +57,8 @@ class ScoringResult(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# JSON schema for Groq strict mode (nullable field handled via oneOf).
+# JSON schema for OpenAI structured outputs. The nullable flag_reason field
+# uses a type union ["string", "null"] (OpenAI rejects 'oneOf').
 # ---------------------------------------------------------------------------
 
 _CRITERION_SCORE_SCHEMA: Dict[str, Any] = {
@@ -115,7 +112,7 @@ SCORING_SCHEMA: Dict[str, Any] = {
             "description": "Flagged by validation, not the model. Set false.",
         },
         "flag_reason": {
-            "oneOf": [{"type": "string"}, {"type": "null"}],
+            "type": ["string", "null"],
             "description": "Set null by the model; validation fills it in.",
         },
     },
@@ -175,6 +172,9 @@ EVIDENCE RULES (validation will REJECT violations):
   titles.
 - NEVER use generic phrases such as 'resume shows relevant experience' or
   'candidate has relevant background'.
+- NEVER open an evidence string with the phrases 'Relevant experience',
+  'Relevant background', or similar lead-ins. Lead with a concrete fact
+  instead: a date, a number, a role title, or a specific skill/tool.
 - Evidence must be traceable to the raw resume text. If the resume is too
   sparse to support a score, say what is actually present and score
   conservatively.
@@ -221,7 +221,7 @@ def score_candidate(
 ) -> ScoringResult:
     """Score a candidate profile against a job description.
 
-    Makes a Groq structured-output call in strict mode. Retries once on
+    Makes an OpenAI structured-output call in strict mode. Retries on
     validation failure before raising.
 
     Args:
@@ -229,7 +229,7 @@ def score_candidate(
         jd_text: Job description plain text.
         resume_text: Raw resume text (used for evidence grounding + injection
             defense).
-        client: Optional prebuilt Groq client (cached in pipeline).
+        client: Optional prebuilt OpenAI client (cached in pipeline).
         model: Optional model override.
 
     Returns:
@@ -261,7 +261,6 @@ def score_candidate(
             response = client.chat.completions.create(
                 model=model,
                 messages=messages,
-                temperature=get_temperature(),
                 response_format={
                     "type": "json_schema",
                     "json_schema": {
@@ -317,10 +316,6 @@ def score_candidate(
                     f"Scoring failed for candidate {candidate_id} after "
                     f"{get_max_retries() + 1} attempts: {e}"
                 ) from e
-            fallback_to_ollama_if_tpd(e)
-            if get_provider() != "groq":
-                client = get_client()  # refresh with the newly active provider
-            rate_limit_sleep(e)
 
     raise RuntimeError(
         f"Scoring failed for candidate {candidate_id} after "
